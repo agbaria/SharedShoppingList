@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -16,6 +17,9 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import dev.agbaria.sharedshoppinglist.Fragments.FriendsFragment;
+import dev.agbaria.sharedshoppinglist.Fragments.SavedListsFragment;
+import dev.agbaria.sharedshoppinglist.Fragments.SharedListsFragment;
 import dev.agbaria.sharedshoppinglist.R;
 
 public class MainActivity extends AppCompatActivity
@@ -57,6 +61,10 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        Fragment shoppingLists = SharedListsFragment.getInstance(mAuth.getCurrentUser().getEmail());
+        getSupportFragmentManager().beginTransaction().add(R.id.content_main, shoppingLists).commit();
+        setTitle("Shared Lists");
     }
 
     @Override
@@ -111,11 +119,17 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.shopping_lists) {
-            // Handle the camera action
+            Fragment shoppingLists = new SharedListsFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, shoppingLists).commit();
+            setTitle("Shared Lists");
         } else if (id == R.id.saved_lists) {
-
+            Fragment savedLists = new SavedListsFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, savedLists).commit();
+            setTitle("Saved Lists");
         } else if (id == R.id.friends) {
-
+            Fragment friends = new FriendsFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, friends).commit();
+            setTitle("Friends");
         }
 
         drawer.closeDrawer(GravityCompat.START);
