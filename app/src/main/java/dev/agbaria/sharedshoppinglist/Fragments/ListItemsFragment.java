@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,47 +20,56 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import dev.agbaria.sharedshoppinglist.Adapters.SharedListsAdapter;
+import dev.agbaria.sharedshoppinglist.Adapters.ListItemsAdapter;
+import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SharedListsFragment extends Fragment {
+public class ListItemsFragment extends Fragment {
 
-    private static final String USER_ID = "userID";
+    private static final String LIST_ID = "listID";
+    private static final String LIST = "list";
 
-    private String userID;
-    private View view;
+    private String listID;
+    private ShoppingList list;
     private ArrayList<DataSnapshot> snapshots;
-    private SharedListsAdapter adapter;
+    private View view;
+    private ListItemsAdapter adapter;
 
-    public static Fragment getInstance(String userID) {
-        Fragment fragment = new SharedListsFragment();
+    public static Fragment getInstance(String listID, ShoppingList list) {
+        Fragment fragment = new ListItemsFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(USER_ID, userID);
+        bundle.putString(LIST_ID, listID);
+        bundle.putSerializable(LIST, list);
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    public SharedListsFragment() {
+    public ListItemsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        getActivity().getMenuInflater().inflate(R.menu.list_menu, menu);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if(getArguments() != null) {
-            this.userID = getArguments().getString(USER_ID).replaceAll("\\.", ",");
-        }
+        if(getArguments() != null)
+            this.listID = getArguments().getString(LIST_ID);
         snapshots = new ArrayList<>();
+        //TODO set activity title to list name
+        //getActivity().setTitle(list.getListName());  has error
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_items, container, false);
         this.view = view;
         return view;
     }
@@ -75,16 +86,16 @@ public class SharedListsFragment extends Fragment {
     }
 
     private void initRecycler() {
-        RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerSharedLists);
+        RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerListItems);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new SharedListsAdapter(snapshots, getActivity());
+        this.adapter = new ListItemsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
     }
 
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("UserLists").child(userID).addChildEventListener(new ChildEventListener() {
+        rootRef.child("ListItems").child(listID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 snapshots.add(dataSnapshot);
@@ -93,14 +104,14 @@ public class SharedListsFragment extends Fragment {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                int position = getListPosition(dataSnapshot.getKey());
+                int position = getItemPosition(dataSnapshot.getKey());
                 snapshots.set(position, dataSnapshot);
                 adapter.notifyItemChanged(position);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                int position = getListPosition(dataSnapshot.getKey());
+                int position = getItemPosition(dataSnapshot.getKey());
                 snapshots.remove(position);
                 adapter.notifyItemRemoved(position);
             }
@@ -117,7 +128,7 @@ public class SharedListsFragment extends Fragment {
         });
     }
 
-    private int getListPosition(String key) {
+    private int getItemPosition(String key) {
         for (int i = 0; i < snapshots.size(); i++) {
             if (snapshots.get(i).getKey().equals(key))
                 return i;
@@ -125,15 +136,3 @@ public class SharedListsFragment extends Fragment {
         throw new IllegalArgumentException("List key was not found");
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

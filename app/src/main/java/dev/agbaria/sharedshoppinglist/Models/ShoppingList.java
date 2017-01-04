@@ -1,11 +1,12 @@
 package dev.agbaria.sharedshoppinglist.Models;
 
+import java.io.Serializable;
+
 /**
  * Created by ANDROID on 28/12/2016.
  */
 
-public class ShoppingList {
-    private String listID;
+public class ShoppingList implements Serializable {
     private String listName;
     private String listOwner;
 
@@ -13,18 +14,9 @@ public class ShoppingList {
 
     }
 
-    public ShoppingList(String listID, String listName, String listOwner) {
-        this.listID = listID;
+    public ShoppingList(String listName, String listOwner) {
         this.listName = listName;
         this.listOwner = listOwner;
-    }
-
-    public String getListID() {
-        return listID;
-    }
-
-    public void setListID(String listID) {
-        this.listID = listID;
     }
 
     public String getListName() {

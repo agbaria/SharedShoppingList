@@ -1,16 +1,19 @@
 package dev.agbaria.sharedshoppinglist.Adapters;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
+import dev.agbaria.sharedshoppinglist.Fragments.ListItemsFragment;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -32,20 +35,24 @@ public class SharedListsAdapter extends RecyclerView.Adapter<SharedListsAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        View view = inflater.inflate(R.layout.shared_list_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        DataSnapshot snapshot = shoppingLists.get(position);
-        ShoppingList shoppingList = snapshot.getValue(ShoppingList.class);
-        //TODO to be continue
-        //https://github.com/appswebdev/Fire/blob/master/app/src/main/java/college/minhal/fire/fragments/ShoppingListFragment.java
-        //https://github.com/appswebdev/Fire/blob/master/app/src/main/java/college/minhal/fire/adapters/ShoppingListsAdapter.java
+        final DataSnapshot snapshot = shoppingLists.get(position);
+        final ShoppingList shoppingList = snapshot.getValue(ShoppingList.class);
         holder.listName.setText(shoppingList.getListName());
         holder.listOwner.setText(shoppingList.getListOwner());
-        holder.listId = shoppingList.getListID();
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = ListItemsFragment.getInstance(snapshot.getKey(), shoppingList);
+                activity.getSupportFragmentManager().beginTransaction()
+                        .add(R.id.content_main, fragment).commit();
+            }
+        });
     }
 
     @Override
@@ -57,12 +64,13 @@ public class SharedListsAdapter extends RecyclerView.Adapter<SharedListsAdapter.
 
         public TextView listName;
         public TextView listOwner;
-        public String listId;
+        public RelativeLayout layout;
 
         public ViewHolder(View v) {
             super(v);
             listName = (TextView) v.findViewById(R.id.tvListName);
             listOwner = (TextView) v.findViewById(R.id.tvListOwner);
+            layout = (RelativeLayout) v.findViewById(R.id.rlListItem);
         }
     }
 }

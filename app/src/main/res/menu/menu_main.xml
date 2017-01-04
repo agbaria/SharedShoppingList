@@ -2,6 +2,31 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="dev.agbaria.sharedshoppinglist.Activities.MainActivity">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_black_24dp"
+        android:title="@string/search_list"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_addList"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:title="@string/add_new_list"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_savedLists"
+        android:orderInCategory="1"
+        android:title="@string/action_saved_lists"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_profile"
+        android:orderInCategory="2"
+        android:title="@string/action_profile"
+        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_signout"
         android:orderInCategory="100"

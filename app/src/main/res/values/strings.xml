@@ -2,19 +2,20 @@
     <string name="app_name">SharedShoppingList</string>
     <string name="action_signout">Sign out</string>
     <string name="TAG">agbaria</string>
-
-    <string-array name="navigation_drawer_items_array">
-        <item>My shopping lists</item>
-        <item>Saved shopping lists</item>
-        <item>Friends</item>
-    </string-array>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="drawer_open">Drawer open</string>
-    <string name="drawer_close">Drawer close</string>
     <string name="reset_password">Reset Password</string>
     <string name="reset_password_text">Enter email to reset your password:</string>
     <string name="reset">Reset</string>
     <string name="cancel">Cancel</string>
+    <string name="add_new_list">Add new list</string>
+    <string name="title_activity_to_remove">ToRemove</string>
+    <string name="action_saved_lists">Saved lists</string>
+    <string name="action_profile">Profile</string>
+    <string name="search_list">Search</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_add_friend">Add friend</string>
+    <string name="action_leave_list">Leave list</string>
+    <string name="title_activity_remove">REMOVE</string>
 </resources>
