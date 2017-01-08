@@ -50,7 +50,7 @@ public class SharedListsAdapter extends RecyclerView.Adapter<SharedListsAdapter.
             public void onClick(View view) {
                 Fragment fragment = ListItemsFragment.getInstance(snapshot.getKey(), shoppingList);
                 activity.getSupportFragmentManager().beginTransaction()
-                        .add(R.id.content_main, fragment).commit();
+                        .replace(R.id.content_main, fragment).addToBackStack(null).commit();
             }
         });
     }

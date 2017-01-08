@@ -67,6 +67,7 @@ public class SharedListsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         init();
+        getActivity().setTitle("Shared lists");
     }
 
     private void init() {

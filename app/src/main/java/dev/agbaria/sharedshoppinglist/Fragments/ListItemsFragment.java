@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,19 +49,24 @@ public class ListItemsFragment extends Fragment {
     }
 
     public ListItemsFragment() {
-        // Required empty public constructor
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        getActivity().getMenuInflater().inflate(R.menu.list_menu, menu);
+        menu.clear();
+        inflater.inflate(R.menu.list_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         if(getArguments() != null) {
             this.listID = getArguments().getString(LIST_ID);
+            Log.d("agbaria", listID);
             this.list = (ShoppingList) getArguments().getSerializable(LIST);
         }
         snapshots = new ArrayList<>();

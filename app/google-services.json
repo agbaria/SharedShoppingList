@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "125901932735-29onm95egofnb28mubiqsm68pdl768tm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.agbaria.sharedshoppinglist",
+            "certificate_hash": "AA594A6EEAE0F9B10D28031BAE6EAA4F5A522A39"
+          }
+        },
+        {
           "client_id": "125901932735-erni2eq5qs7belhk8c4v5sjh1987q4hh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
