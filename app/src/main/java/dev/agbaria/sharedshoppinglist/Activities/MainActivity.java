@@ -45,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-        setTitle("Shared Lists");
     }
 
     @Override
