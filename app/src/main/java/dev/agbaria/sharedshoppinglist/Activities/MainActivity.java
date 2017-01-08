@@ -32,21 +32,21 @@ public class MainActivity extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                Log.d("agbaria", "auth state changed");
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user == null) {
-                    Log.d("agbaria", "user - null");
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     intent.setFlags(
                             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
                     );
                     startActivity(intent);
                 }
+                else {
+                    Fragment shoppingLists = SharedListsFragment.getInstance(mAuth.getCurrentUser().getEmail());
+                    getSupportFragmentManager().beginTransaction().add(R.id.content_main, shoppingLists).commit();
+                }
             }
         };
 
-        Fragment shoppingLists = SharedListsFragment.getInstance(mAuth.getCurrentUser().getEmail());
-        getSupportFragmentManager().beginTransaction().add(R.id.content_main, shoppingLists).commit();
         setTitle("Shared Lists");
     }
 

@@ -59,11 +59,12 @@ public class ListItemsFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(getArguments() != null)
+        if(getArguments() != null) {
             this.listID = getArguments().getString(LIST_ID);
+            this.list = (ShoppingList) getArguments().getSerializable(LIST);
+        }
         snapshots = new ArrayList<>();
-        //TODO set activity title to list name
-        //getActivity().setTitle(list.getListName());  has error
+        getActivity().setTitle(list.getListName());
     }
 
     @Override

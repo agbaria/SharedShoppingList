@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp" />
+        android:layout_marginTop="20dp" />
 
     <View
         android:layout_below="@id/sign_in_button"
@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/etEmail"
+            android:inputType="textEmailAddress"
             android:nextFocusUp="@id/etEmail"
             android:nextFocusLeft="@id/etEmail"
             android:hint="Email"/>

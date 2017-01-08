@@ -15,12 +15,16 @@
       },
       "oauth_client": [
         {
-          "client_id": "125901932735-tf9o37kpe4cl11lcrfuhv5ddiifre0iv.apps.googleusercontent.com",
+          "client_id": "125901932735-erni2eq5qs7belhk8c4v5sjh1987q4hh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "dev.agbaria.sharedshoppinglist",
-            "certificate_hash": "AA594A6EEAE0F9B10D28031BAE6EAA4F5A522A39"
+            "certificate_hash": "1FB65DD94C9F5EFE408CB323A4035464C8F7F090"
           }
+        },
+        {
+          "client_id": "125901932735-lvk5t9k0e0r7vhhig3p5krg0mvtu89bc.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
           "client_id": "125901932735-vjooc27sltuocq44a8n41u68cicireqf.apps.googleusercontent.com",
@@ -40,7 +44,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "125901932735-vjooc27sltuocq44a8n41u68cicireqf.apps.googleusercontent.com",
+              "client_id": "125901932735-lvk5t9k0e0r7vhhig3p5krg0mvtu89bc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

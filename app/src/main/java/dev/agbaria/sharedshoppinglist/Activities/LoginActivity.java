@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         fireAuth = FirebaseAuth.getInstance();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.client_id))
                 .requestEmail()
                 .build();
 
@@ -138,6 +139,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     );
         } else {
             showError(new Exception("Error Signing in with Google"), btnGoogle);
+            Log.d("agbaria", result.getStatus().toString());
         }
     }
 
