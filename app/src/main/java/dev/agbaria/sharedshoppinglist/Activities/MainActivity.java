@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import dev.agbaria.sharedshoppinglist.Fragments.FriendsFragment;
 import dev.agbaria.sharedshoppinglist.Fragments.SharedListsFragment;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else {
-                    Fragment shoppingLists = SharedListsFragment.getInstance(mAuth.getCurrentUser().getEmail());
+                    currentUser = mAuth.getCurrentUser();
+                    Fragment shoppingLists = SharedListsFragment.getInstance(currentUser.getEmail());
                     getSupportFragmentManager().beginTransaction().add(R.id.content_main, shoppingLists).commit();
                 }
             }
@@ -71,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_addList:
+                return true;
+            case R.id.action_friends:
+                Fragment fragment = FriendsFragment.getInstance(currentUser.getEmail());
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
+                        .addToBackStack(null).commit();
                 return true;
             //TODO complete the menu actions
             case R.id.action_savedLists:

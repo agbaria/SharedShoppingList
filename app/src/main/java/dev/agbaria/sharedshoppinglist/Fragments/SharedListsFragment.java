@@ -58,16 +58,15 @@ public class SharedListsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
-        this.view = view;
+        view = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        init();
         getActivity().setTitle("Shared lists");
+        init();
     }
 
     private void init() {

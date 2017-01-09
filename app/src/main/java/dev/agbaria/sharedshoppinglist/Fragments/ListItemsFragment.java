@@ -66,11 +66,9 @@ public class ListItemsFragment extends Fragment {
 
         if(getArguments() != null) {
             this.listID = getArguments().getString(LIST_ID);
-            Log.d("agbaria", listID);
             this.list = (ShoppingList) getArguments().getSerializable(LIST);
         }
         snapshots = new ArrayList<>();
-        getActivity().setTitle(list.getListName());
     }
 
     @Override
@@ -84,6 +82,7 @@ public class ListItemsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getActivity().setTitle(list.getListName());
         init();
     }
 
