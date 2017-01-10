@@ -1,0 +1,84 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="dev.agbaria.sharedshoppinglist.Fragments.ListInfoFragment"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvListName"
+        android:text="List title"
+        android:textSize="30sp"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv1"
+        android:text="Created by: "
+        android:textSize="20sp"
+        android:layout_below="@id/tvListName"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvListOwner"
+        android:text="UserName"
+        android:textSize="20sp"
+        android:layout_below="@id/tv1"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv2"
+        android:text="Creation date: "
+        android:textSize="20sp"
+        android:layout_below="@id/tvListOwner"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvCreationDate"
+        android:text="1/1/2017"
+        android:textSize="20sp"
+        android:layout_below="@id/tv2"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv3"
+        android:text="Description: "
+        android:textSize="20sp"
+        android:layout_below="@id/tvCreationDate" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvListDescription"
+        android:text="no description descasd asda asd asd asd asddas asd asdad ription description description description description"
+        android:textSize="20sp"
+        android:layout_below="@id/tv3"
+        android:layout_marginBottom="7dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv4"
+        android:text="Participants: "
+        android:textSize="20sp"
+        android:layout_below="@id/tvListDescription"
+        android:padding="10dp"
+        android:background="#EEEEEE"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/recyclerParticipants"
+        android:layout_below="@id/tv4"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

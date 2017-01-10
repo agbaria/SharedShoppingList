@@ -9,14 +9,18 @@ import java.io.Serializable;
 public class ShoppingList implements Serializable {
     private String listName;
     private String listOwner;
+    private String description;
+    private long creationTimeStamp;
 
     public ShoppingList() {
 
     }
 
-    public ShoppingList(String listName, String listOwner) {
+    public ShoppingList(String listName, String listOwner, String description, long creationTimeStamp) {
         this.listName = listName;
         this.listOwner = listOwner;
+        this.description = description;
+        this.creationTimeStamp = creationTimeStamp;
     }
 
     public String getListName() {
@@ -33,5 +37,21 @@ public class ShoppingList implements Serializable {
 
     public void setListOwner(String listOwner) {
         this.listOwner = listOwner;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getCreationTimeStamp() {
+        return creationTimeStamp;
+    }
+
+    public void setCreationTimeStamp(long creationTimeStamp) {
+        this.creationTimeStamp = creationTimeStamp;
     }
 }

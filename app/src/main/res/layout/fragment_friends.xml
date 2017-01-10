@@ -6,10 +6,10 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:id="@+id/addFriendHeader">
         <ImageButton
-            android:layout_width="40dp"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
             android:id="@+id/ibAddFriend"
             android:src="@drawable/ic_add_black_24dp"

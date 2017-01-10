@@ -15,8 +15,14 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_leaveList"
+        android:id="@+id/action_listInfo"
         android:orderInCategory="1"
+        android:title="@string/action_list_info"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_leaveList"
+        android:orderInCategory="2"
         android:title="@string/action_leave_list"
         app:showAsAction="never" />
 
