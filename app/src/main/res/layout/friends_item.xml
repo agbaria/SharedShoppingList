@@ -18,4 +18,5 @@
         android:id="@+id/tvFriendEmail"
         android:text="myEmail@5example.com"
         android:layout_below="@id/tvFriendName"/>
+
 </RelativeLayout>

@@ -19,4 +19,5 @@
     <string name="action_leave_list">Leave list</string>
     <string name="action_friends">Friends</string>
     <string name="client_id">125901932735-lvk5t9k0e0r7vhhig3p5krg0mvtu89bc.apps.googleusercontent.com</string>
+    <string name="email_hint">Friend email</string>
 </resources>

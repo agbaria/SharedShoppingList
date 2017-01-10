@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Utils;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -42,9 +43,10 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         //Save the user:
-                        User u = new User(getName(), getEmail());
+                        String email = getEmail().replaceAll("\\.", ",");
+                        User u = new User(getName(), email);
                         FirebaseDatabase.getInstance().getReference().
-                                child("Users").child(getEmail().replaceAll("\\.", ",")).setValue(u);
+                                child("Users").child(email).setValue(u);
                         gotoMain();
                     }
                 })
@@ -78,13 +80,8 @@ public class SignupActivity extends AppCompatActivity {
             return false;
         }
 
-        if (getEmail().isEmpty()) {
-            etEmail.setError("Email Must not be empty");
+        if (!Utils.validate(getEmail(), etEmail))
             return false;
-        } else if (!getEmail().contains("@")) {
-            etEmail.setError("Email Must contain @");
-            return false;
-        }
 
         if (getPassword().length() < 6) {
             etPassword.setError("Password must contain at least 6 characters");

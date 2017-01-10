@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import dev.agbaria.sharedshoppinglist.Fragments.ResetPassword;
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Utils;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -189,13 +190,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     private boolean validate() {
-        if (getEmail().isEmpty()) {
-            etEmail.setError("Email Must not be empty");
+        if (!Utils.validate(getEmail(), etEmail))
             return false;
-        } else if (!getEmail().contains("@")) {
-            etEmail.setError("Email Must contain @");
-            return false;
-        }
 
         if (getPassword().length() < 6) {
             etPassword.setError("Password must contain at least 6 characters");

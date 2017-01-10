@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Utils;
 
 /**
  * Created by ANDROID on 21/12/2016.
@@ -58,10 +59,11 @@ public class ResetPassword extends DialogFragment implements View.OnClickListene
     }
 
     private void resetPassword() {
-        if(!validate())
-            return;
-        FirebaseAuth auth = FirebaseAuth.getInstance();
         String emailAddress = etEmail.getText().toString();
+        if(!Utils.validate(emailAddress, etEmail)) {
+            return;
+        }
+        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         auth.sendPasswordResetEmail(emailAddress)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -74,20 +76,5 @@ public class ResetPassword extends DialogFragment implements View.OnClickListene
                 });
         dismiss();
         Toast.makeText(getActivity(), "Check your email please", Toast.LENGTH_LONG).show();
-    }
-
-    private boolean validate() {
-        boolean isValid = false;
-
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        CharSequence inputStr = etEmail.getText().toString();
-
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(inputStr);
-        if (matcher.matches())
-            isValid = true;
-        else
-            etEmail.setError("Invalid Email");
-        return isValid;
     }
 }

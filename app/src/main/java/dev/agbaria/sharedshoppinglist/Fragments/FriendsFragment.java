@@ -7,25 +7,33 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.FriendsAdapter;
 import dev.agbaria.sharedshoppinglist.Adapters.SharedListsAdapter;
+import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements View.OnClickListener {
 
     private static final String USER_ID = "userID";
 
@@ -33,6 +41,9 @@ public class FriendsFragment extends Fragment {
     private View view;
     private ArrayList<DataSnapshot> snapshots;
     private FriendsAdapter adapter;
+
+    private EditText etAddFriend;
+    private ImageButton ibAddFriend;
 
     public static Fragment getInstance(String userID) {
         Fragment fragment = new FriendsFragment();
@@ -43,12 +54,14 @@ public class FriendsFragment extends Fragment {
     }
 
     public FriendsFragment() {
-        // Required empty public constructor
+        setHasOptionsMenu(true);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         if(getArguments() != null) {
             this.userID = getArguments().getString(USER_ID).replaceAll("\\.", ",");
         }
@@ -59,7 +72,29 @@ public class FriendsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_friends, container, false);
+
+        etAddFriend = (EditText) view.findViewById(R.id.etAddFriend);
+        ibAddFriend = (ImageButton) view.findViewById(R.id.ibAddFriend);
+
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ibAddFriend.setOnClickListener(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        ibAddFriend.setOnClickListener(null);
     }
 
     @Override
@@ -123,5 +158,32 @@ public class FriendsFragment extends Fragment {
                 return i;
         }
         throw new IllegalArgumentException("List key was not found");
+    }
+
+    @Override
+    public void onClick(View view) {
+        String email = etAddFriend.getText().toString();
+        if(!Utils.validate(email, etAddFriend))
+            return;
+
+        final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        final String encodedEmail = email.replaceAll("\\.", ",");
+        rootRef.child("Users").child(encodedEmail).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists())
+                    Toast.makeText(getContext(), "Email doesn't exist", Toast.LENGTH_LONG).show();
+                else {
+                    User friend = dataSnapshot.getValue(User.class);
+                    rootRef.child("UserFriends").child(userID).child(encodedEmail).setValue(friend);
+                    etAddFriend.setText("");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //no implementation
+            }
+        });
     }
 }

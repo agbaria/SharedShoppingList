@@ -53,13 +53,6 @@ public class ListItemsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.list_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
@@ -77,6 +70,13 @@ public class ListItemsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_list_items, container, false);
         this.view = view;
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.list_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     currentUser = mAuth.getCurrentUser();
+                    assert currentUser != null;
                     Fragment shoppingLists = SharedListsFragment.getInstance(currentUser.getEmail());
                     getSupportFragmentManager().beginTransaction().add(R.id.content_main, shoppingLists).commit();
                 }
@@ -79,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment = FriendsFragment.getInstance(currentUser.getEmail());
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
                         .addToBackStack(null).commit();
+                return true;
+            case R.id.action_add_friend:
                 return true;
             //TODO complete the menu actions
             case R.id.action_savedLists:
