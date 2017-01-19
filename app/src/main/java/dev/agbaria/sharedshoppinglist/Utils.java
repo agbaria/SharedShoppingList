@@ -2,6 +2,9 @@ package dev.agbaria.sharedshoppinglist;
 
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,5 +26,10 @@ public class Utils {
         else
             editText.setError("Invalid Email");
         return isValid;
+    }
+
+    public static String getUserID() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        return currentUser.getEmail().replaceAll("\\.", ",");
     }
 }

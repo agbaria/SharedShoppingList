@@ -40,11 +40,10 @@ public class ListInfoFragment extends Fragment {
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private FriendsAdapter adapter;
+    //private ArrayAdapter adapter;
 
-    private TextView listName;
     private TextView listOwner;
     private TextView creationDate;
-    private TextView listDescription;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
         Fragment fragment = new ListInfoFragment();
@@ -82,18 +81,14 @@ public class ListInfoFragment extends Fragment {
     }
 
     private void findViews() {
-        listName = (TextView) view.findViewById(R.id.tvListName);
         listOwner = (TextView) view.findViewById(R.id.tvListOwner);
         creationDate = (TextView) view.findViewById(R.id.tvCreationDate);
-        listDescription = (TextView) view.findViewById(R.id.tvListDescription);
     }
 
     private void setViewsValues() {
-        listName.setText(list.getListName());
         listOwner.setText(list.getListOwner());
         Date date = new Date(list.getCreationTimeStamp() * 1000L);
         creationDate.setText(DateFormat.format("dd-MM-yyyy", date));
-        listDescription.setText(list.getDescription());
     }
 
     @Override
@@ -118,6 +113,11 @@ public class ListInfoFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new FriendsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
+        /*
+        ListView listView = (ListView) view.findViewById(R.id.listParticipants);
+        adapter = new ArrayAdapter(getContext(), R.layout.friends_item, snapshots);
+        listView.setAdapter(adapter);
+        */
     }
 
     private void updateContent() {
@@ -128,6 +128,7 @@ public class ListInfoFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 snapshots.add(dataSnapshot);
                 adapter.notifyItemInserted(snapshots.size() - 1);
+//                adapter.add(dataSnapshot);
             }
 
             @Override
@@ -135,6 +136,8 @@ public class ListInfoFragment extends Fragment {
                 int position = getListPosition(dataSnapshot.getKey());
                 snapshots.set(position, dataSnapshot);
                 adapter.notifyItemChanged(position);
+//                adapter.remove(snapshots.get(position));
+//                adapter.insert(dataSnapshot, position);
             }
 
             @Override
@@ -142,6 +145,7 @@ public class ListInfoFragment extends Fragment {
                 int position = getListPosition(dataSnapshot.getKey());
                 snapshots.remove(position);
                 adapter.notifyItemRemoved(position);
+//                adapter.remove(snapshots.get(position));
             }
 
             @Override

@@ -19,12 +19,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListItemsAdapter;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,11 +36,13 @@ public class ListItemsFragment extends Fragment {
     private static final String LIST_ID = "listID";
     private static final String LIST = "list";
 
+    private String userID;
     private String listID;
     private ShoppingList list;
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private ListItemsAdapter adapter;
+    private DatabaseReference rootRef;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
         Fragment fragment = new ListItemsFragment();
@@ -59,9 +63,12 @@ public class ListItemsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         if(getArguments() != null) {
-            this.listID = getArguments().getString(LIST_ID);
-            this.list = (ShoppingList) getArguments().getSerializable(LIST);
+            Bundle arguments = getArguments();
+            this.listID = arguments.getString(LIST_ID);
+            this.list = (ShoppingList) arguments.getSerializable(LIST);
         }
+        this.userID = Utils.getUserID();
+        rootRef = FirebaseDatabase.getInstance().getReference();
         snapshots = new ArrayList<>();
     }
 
@@ -93,10 +100,44 @@ public class ListItemsFragment extends Fragment {
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;
             case R.id.action_leaveList:
+                leaveList();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void leaveList() {
+        rootRef.child("SharedWith").child(listID).child(userID).removeValue(
+                new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        rootRef.child("SharedWith").child(listID).addListenerForSingleValueEvent(
+                                new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if(!dataSnapshot.exists())
+                                            rootRef.child("ListItems").child(listID).removeValue();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                }
+                        );
+
+                        rootRef.child("UserLists").child(userID).child(listID).removeValue(
+                                new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        getActivity().getSupportFragmentManager().popBackStack();
+                                    }
+                                }
+                        );
+                    }
+                }
+        );
     }
 
     @Override
@@ -120,7 +161,6 @@ public class ListItemsFragment extends Fragment {
 
     private void updateContent() {
         snapshots.clear();
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("ListItems").child(listID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {

@@ -8,18 +8,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvListName"
-        android:text="List title"
-        android:textSize="30sp"
-        android:layout_marginBottom="10dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/tv1"
         android:text="Created by: "
-        android:textSize="20sp"
-        android:layout_below="@id/tvListName"/>
+        android:textSize="20sp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,29 +39,12 @@
         android:layout_marginBottom="5dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv3"
-        android:text="Description: "
-        android:textSize="20sp"
-        android:layout_below="@id/tvCreationDate" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvListDescription"
-        android:text="no description descasd asda asd asd asd asddas asd asdad ription description description description description"
-        android:textSize="20sp"
-        android:layout_below="@id/tv3"
-        android:layout_marginBottom="7dp"/>
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv4"
         android:text="Participants: "
         android:textSize="20sp"
-        android:layout_below="@id/tvListDescription"
+        android:layout_below="@id/tvCreationDate"
         android:padding="10dp"
         android:background="#EEEEEE"/>
 
@@ -81,4 +55,14 @@
         android:layout_below="@id/tv4"
         android:layout_alignParentBottom="true"/>
 
+<!--
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/listParticipants"
+        android:layout_below="@id/tv4"
+        android:layout_alignParentBottom="true"
+        android:animateLayoutChanges="true"
+        />
+-->
 </RelativeLayout>
