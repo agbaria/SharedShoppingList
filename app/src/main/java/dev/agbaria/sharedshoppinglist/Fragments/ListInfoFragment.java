@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListInfoFriendsAdapter;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
+import dev.agbaria.sharedshoppinglist.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
@@ -37,6 +38,7 @@ public class ListInfoFragment extends Fragment {
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private ListInfoFriendsAdapter adapter;
+    private MyChildEventListener myListener;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
         Fragment fragment = new ListInfoFragment();
@@ -66,8 +68,8 @@ public class ListInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_info, container, false);
-        this.view = view;
+        this.view = inflater.inflate(R.layout.fragment_list_info, container, false);
+        initRecycler();
         return view;
     }
 
@@ -80,11 +82,6 @@ public class ListInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        init();
-    }
-
-    private void init() {
-        initRecycler();
         updateContent();
     }
 
@@ -93,49 +90,19 @@ public class ListInfoFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ListInfoFriendsAdapter(snapshots, list,getActivity());
         recycler.setAdapter(adapter);
+        myListener = new MyChildEventListener(snapshots, adapter);
     }
 
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("SharedWith").child(listID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                snapshots.add(dataSnapshot);
-                adapter.notifyItemInserted(snapshots.size() - 1);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                int position = getListPosition(dataSnapshot.getKey());
-                snapshots.set(position, dataSnapshot);
-                adapter.notifyItemChanged(position);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                int position = getListPosition(dataSnapshot.getKey());
-                snapshots.remove(position);
-                adapter.notifyItemRemoved(position);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        rootRef.child("SharedWith").child(listID).addChildEventListener(myListener);
     }
 
-    private int getListPosition(String key) {
-        for (int i = 0; i < snapshots.size(); i++) {
-            if (snapshots.get(i).getKey().equals(key))
-                return i;
-        }
-        throw new IllegalArgumentException("List key was not found");
+    @Override
+    public void onPause() {
+        super.onPause();
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.child("SharedWith").child(listID).removeEventListener(myListener);
     }
 }

@@ -26,7 +26,7 @@ import dev.agbaria.sharedshoppinglist.Utils;
  * Created by ANDROID on 21/12/2016.
  */
 
-public class ResetPassword extends DialogFragment implements View.OnClickListener{
+public class ResetPassword extends DialogFragment implements View.OnClickListener {
 
     EditText etEmail;
     Button btnCancel, btnReset;

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Leave &quot;"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:id="@+id/tv1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:text="ListName"
+        android:id="@+id/tvLeaveListName"
+        android:layout_toEndOf="@id/tv1"
+        android:layout_toRightOf="@id/tv1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="&quot; list?"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:id="@+id/tv2"
+        android:layout_toEndOf="@id/tvLeaveListName"
+        android:layout_toRightOf="@id/tvLeaveListName"/>
+
+    <View
+        android:layout_below="@id/tv1"
+        android:id="@+id/br1"
+        android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#aa717171"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <Button
+        android:text="@string/leave_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnLeave"
+        android:background="#00ffffff"
+        android:layout_below="@id/br1"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:text="@string/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCancel"
+        android:background="#00ffffff"
+        android:layout_toLeftOf="@id/btnLeave"
+        android:layout_below="@id/br1"/>
+
+</RelativeLayout>
