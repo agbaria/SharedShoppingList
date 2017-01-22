@@ -54,7 +54,7 @@ public class ListInfoFriendsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             viewHolder.listOwner.setText(list.getListOwner());
             Date date = new Date(list.getCreationTimeStamp() * 1000L);
-            viewHolder.creationDate.setText(DateFormat.format("dd-MM-yyyy", date));
+            viewHolder.creationDate.setText(DateFormat.format("dd/MM/yyyy", date));
         }
         else{
             FriendViewHolder viewHolder = (FriendViewHolder) holder;

@@ -8,7 +8,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/tv1"
         android:text="Created by: "
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -17,6 +19,7 @@
         android:text="UserName"
         android:textSize="20sp"
         android:layout_below="@id/tv1"
+        android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"/>
 
     <TextView
@@ -25,7 +28,8 @@
         android:id="@+id/tv2"
         android:text="Creation date: "
         android:textSize="20sp"
-        android:layout_below="@id/tvListOwner"/>
+        android:layout_below="@id/tvListOwner"
+        android:layout_marginLeft="5dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,6 +38,7 @@
         android:text="1/1/2017"
         android:textSize="20sp"
         android:layout_below="@id/tv2"
+        android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"/>
 
     <TextView
@@ -46,6 +51,8 @@
         android:background="#EEEEEE"
         android:layout_below="@+id/tvCreationDate"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:paddingStart="5dp"
+        android:paddingLeft="5dp" />
 
 </RelativeLayout>

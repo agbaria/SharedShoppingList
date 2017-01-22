@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.SharedListsAdapter;
+import dev.agbaria.sharedshoppinglist.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
@@ -32,6 +33,7 @@ public class SharedListsFragment extends Fragment {
     private View view;
     private ArrayList<DataSnapshot> snapshots;
     private SharedListsAdapter adapter;
+    private MyChildEventListener myListener;
 
     public static Fragment getInstance(String userID) {
         Fragment fragment = new SharedListsFragment();
@@ -59,6 +61,7 @@ public class SharedListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
+        initRecycler();
         return view;
     }
 
@@ -66,11 +69,6 @@ public class SharedListsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle("Shared lists");
-        init();
-    }
-
-    private void init() {
-        initRecycler();
         updateContent();
     }
 
@@ -79,50 +77,20 @@ public class SharedListsFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new SharedListsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
+        myListener = new MyChildEventListener(snapshots, adapter);
     }
 
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.child("UserLists").child(userID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                snapshots.add(dataSnapshot);
-                adapter.notifyItemInserted(snapshots.size() - 1);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                int position = getListPosition(dataSnapshot.getKey());
-                snapshots.set(position, dataSnapshot);
-                adapter.notifyItemChanged(position);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                int position = getListPosition(dataSnapshot.getKey());
-                snapshots.remove(position);
-                adapter.notifyItemRemoved(position);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        rootRef.child("UserLists").child(userID).addChildEventListener(myListener);
     }
 
-    private int getListPosition(String key) {
-        for (int i = 0; i < snapshots.size(); i++) {
-            if (snapshots.get(i).getKey().equals(key))
-                return i;
-        }
-        throw new IllegalArgumentException("List key was not found");
+    @Override
+    public void onPause() {
+        super.onPause();
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        rootRef.child("UserLists").child(userID).removeEventListener(myListener);
     }
 }
 

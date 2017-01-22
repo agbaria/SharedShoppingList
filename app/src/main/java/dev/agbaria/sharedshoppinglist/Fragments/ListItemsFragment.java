@@ -1,8 +1,10 @@
 package dev.agbaria.sharedshoppinglist.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListItemsAdapter;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
+import dev.agbaria.sharedshoppinglist.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;
 
@@ -34,6 +37,7 @@ public class ListItemsFragment extends Fragment {
 
     private static final String LIST_ID = "listID";
     private static final String LIST = "list";
+    private static final int LEAVE_LIST = 10;
 
     private String userID;
     private String listID;
@@ -41,6 +45,7 @@ public class ListItemsFragment extends Fragment {
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private ListItemsAdapter adapter;
+    private MyChildEventListener myListner;
     private DatabaseReference rootRef;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
@@ -74,8 +79,8 @@ public class ListItemsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_list_items, container, false);
-        this.view = view;
+        this.view = inflater.inflate(R.layout.fragment_list_items, container, false);
+        initRecycler();
         return view;
     }
 
@@ -103,43 +108,58 @@ public class ListItemsFragment extends Fragment {
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;
             case R.id.action_leaveList:
-                leaveList();
+                fragment = new LeaveListFragment();
+                fragment.setTargetFragment(this, LEAVE_LIST);
+                ((DialogFragment) fragment).show(getFragmentManager(), "DialogFragment");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == LEAVE_LIST) {
+            if (resultCode == 1)
+                leaveList();
+        }
+    }
+
     private void leaveList() {
         rootRef.child("SharedWith").child(listID).child(userID).removeValue(
-                new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        rootRef.child("SharedWith").child(listID).addListenerForSingleValueEvent(
-                                new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if(!dataSnapshot.exists())
-                                            rootRef.child("ListItems").child(listID).removeValue();
-                                    }
+            new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    rootRef.child("SharedWith").child(listID).addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(!dataSnapshot.exists())
+                                    rootRef.child("ListItems").child(listID).removeValue();
+                                else {
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-
-                                    }
                                 }
-                        );
+                            }
 
-                        rootRef.child("UserLists").child(userID).child(listID).removeValue(
-                                new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        getActivity().getSupportFragmentManager().popBackStack();
-                                    }
-                                }
-                        );
-                    }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        }
+                    );
+
+                    rootRef.child("UserLists").child(userID).child(listID).removeValue(
+                        new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                getActivity().getSupportFragmentManager().popBackStack();
+                            }
+                        }
+                    );
                 }
+            }
         );
     }
 
@@ -147,11 +167,6 @@ public class ListItemsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle(list.getListName());
-        init();
-    }
-
-    private void init() {
-        initRecycler();
         updateContent();
     }
 
@@ -160,48 +175,17 @@ public class ListItemsFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         this.adapter = new ListItemsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
+        myListner = new MyChildEventListener(snapshots, adapter);
     }
 
     private void updateContent() {
         snapshots.clear();
-        rootRef.child("ListItems").child(listID).addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                snapshots.add(dataSnapshot);
-                adapter.notifyItemInserted(snapshots.size() - 1);
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                int position = getItemPosition(dataSnapshot.getKey());
-                snapshots.set(position, dataSnapshot);
-                adapter.notifyItemChanged(position);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                int position = getItemPosition(dataSnapshot.getKey());
-                snapshots.remove(position);
-                adapter.notifyItemRemoved(position);
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        rootRef.child("ListItems").child(listID).addChildEventListener(myListner);
     }
 
-    private int getItemPosition(String key) {
-        for (int i = 0; i < snapshots.size(); i++) {
-            if (snapshots.get(i).getKey().equals(key))
-                return i;
-        }
-        throw new IllegalArgumentException("List key was not found");
+    @Override
+    public void onPause() {
+        super.onPause();
+        rootRef.child("ListItems").child(listID).removeEventListener(myListner);
     }
 }
