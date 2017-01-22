@@ -56,7 +56,6 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Sign up"
-        android:background="#fff"
         android:layout_below="@+id/til3"
         android:onClick="signUp"/>
 

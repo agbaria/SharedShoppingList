@@ -1,6 +1,8 @@
 package dev.agbaria.sharedshoppinglist.Fragments;
 
 
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -25,7 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.FriendsAdapter;
-import dev.agbaria.sharedshoppinglist.Adapters.SharedListsAdapter;
+import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;
@@ -33,11 +36,19 @@ import dev.agbaria.sharedshoppinglist.Utils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsFragment extends Fragment implements View.OnClickListener {
+public class FriendsFragment extends Fragment
+        implements View.OnClickListener, FriendsAdapter.PositionClickedListener {
 
     private static final String USER_ID = "userID";
+    private static final String LIST_ID = "listID";
+    private static final String TO_ADD = "toAdd";
+    private static final String LIST = "list";
 
     private String userID;
+    private boolean toAdd;
+    private String listID;
+    private ShoppingList list;
+    private ArrayList<Integer> friendsToAdd;
     private View view;
     private ArrayList<DataSnapshot> snapshots;
     private FriendsAdapter adapter;
@@ -45,10 +56,16 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     private EditText etAddFriend;
     private ImageButton ibAddFriend;
 
-    public static Fragment getInstance(String userID) {
+    public static Fragment getInstance(String userID, boolean toAdd,
+                                       @Nullable String listID, @Nullable ShoppingList list) {
         Fragment fragment = new FriendsFragment();
         Bundle bundle = new Bundle();
         bundle.putString(USER_ID, userID);
+        bundle.putBoolean(TO_ADD, toAdd);
+        if (toAdd) {
+            bundle.putString(LIST_ID, listID);
+            bundle.putSerializable(LIST, list);
+        }
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -61,9 +78,15 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        if(getArguments() != null) {
-            this.userID = getArguments().getString(USER_ID).replaceAll("\\.", ",");
+        Bundle arguments = getArguments();
+        if(arguments != null) {
+            this.userID = arguments.getString(USER_ID).replaceAll("\\.", ",");
+            this.toAdd = arguments.getBoolean(TO_ADD);
+            if (toAdd) {
+                this.listID = arguments.getString(LIST_ID);
+                this.list = (ShoppingList) arguments.getSerializable(LIST);
+                this.friendsToAdd = new ArrayList<>();
+            }
         }
         snapshots = new ArrayList<>();
     }
@@ -82,7 +105,18 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
+        if (toAdd)
+            inflater.inflate(R.menu.friends_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_add_friends) {
+            addSelectedFriends();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -100,7 +134,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setTitle("Friends");
+        if (toAdd) getActivity().setTitle("Select friends");
+        else getActivity().setTitle("Friends");
         init();
     }
 
@@ -112,7 +147,10 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerFriends);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new FriendsAdapter(snapshots, getActivity());
+        if (toAdd)
+            adapter = new FriendsAdapter(snapshots, getActivity(), toAdd, this);
+        else
+            adapter = new FriendsAdapter(snapshots, getActivity(), toAdd, null);
         recycler.setAdapter(adapter);
     }
 
@@ -123,6 +161,8 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 snapshots.add(dataSnapshot);
+                if (toAdd)
+                    friendsToAdd.add(0);
                 adapter.notifyItemInserted(snapshots.size() - 1);
             }
 
@@ -161,29 +201,70 @@ public class FriendsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onClick(View view) {
+    public void onClick(View v) {
+        addNewFriend();
+    }
+
+    private void addNewFriend() {
         String email = etAddFriend.getText().toString();
         if(!Utils.validate(email, etAddFriend))
             return;
 
         final DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         final String encodedEmail = email.replaceAll("\\.", ",");
-        rootRef.child("Users").child(encodedEmail).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists())
-                    Toast.makeText(getContext(), "Email doesn't exist", Toast.LENGTH_LONG).show();
-                else {
-                    User friend = dataSnapshot.getValue(User.class);
-                    rootRef.child("UserFriends").child(userID).child(encodedEmail).setValue(friend);
-                    etAddFriend.setText("");
+        rootRef.child("Users").child(encodedEmail).addListenerForSingleValueEvent(
+            new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(!dataSnapshot.exists())
+                        Toast.makeText(getContext(), "Email doesn't exist", Toast.LENGTH_LONG).show();
+                    else {
+                        User friend = dataSnapshot.getValue(User.class);
+                        rootRef.child("UserFriends").child(userID).child(encodedEmail).setValue(friend);
+                        etAddFriend.setText("");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //no implementation
+                }
+            });
+    }
+
+    @Override
+    public void clicked(int position, View v) {
+        if (friendsToAdd.get(position).equals(0)) {
+            friendsToAdd.set(position, 1);
+            v.setBackgroundColor(Color.LTGRAY);
+
+        }
+        else {
+            friendsToAdd.set(position, 0);
+            v.setBackgroundColor(Color.TRANSPARENT);
+        }
+    }
+
+    private void addSelectedFriends() {
+        new Task().execute();
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private class Task extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+            for (int i = 0; i < friendsToAdd.size(); i++) {
+                if (friendsToAdd.get(i).equals(1)) {
+                    DataSnapshot snapshot = snapshots.get(i);
+                    User user = snapshot.getValue(User.class);
+
+                    rootRef.child("SharedWith").child(listID).child(user.getEmail()).setValue(user);
+                    rootRef.child("UserLists").child(user.getEmail()).child(listID).setValue(list);
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //no implementation
-            }
-        });
+            return null;
+        }
     }
 }

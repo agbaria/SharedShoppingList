@@ -6,13 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -21,9 +19,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Date;
 
-import dev.agbaria.sharedshoppinglist.Adapters.FriendsAdapter;
+import dev.agbaria.sharedshoppinglist.Adapters.ListInfoFriendsAdapter;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -39,11 +36,7 @@ public class ListInfoFragment extends Fragment {
     private ShoppingList list;
     private ArrayList<DataSnapshot> snapshots;
     private View view;
-    private FriendsAdapter adapter;
-    //private ArrayAdapter adapter;
-
-    private TextView listOwner;
-    private TextView creationDate;
+    private ListInfoFriendsAdapter adapter;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
         Fragment fragment = new ListInfoFragment();
@@ -75,20 +68,7 @@ public class ListInfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_info, container, false);
         this.view = view;
-        findViews();
-        setViewsValues();
         return view;
-    }
-
-    private void findViews() {
-        listOwner = (TextView) view.findViewById(R.id.tvListOwner);
-        creationDate = (TextView) view.findViewById(R.id.tvCreationDate);
-    }
-
-    private void setViewsValues() {
-        listOwner.setText(list.getListOwner());
-        Date date = new Date(list.getCreationTimeStamp() * 1000L);
-        creationDate.setText(DateFormat.format("dd-MM-yyyy", date));
     }
 
     @Override
@@ -111,13 +91,8 @@ public class ListInfoFragment extends Fragment {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerParticipants);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new FriendsAdapter(snapshots, getActivity());
+        adapter = new ListInfoFriendsAdapter(snapshots, list,getActivity());
         recycler.setAdapter(adapter);
-        /*
-        ListView listView = (ListView) view.findViewById(R.id.listParticipants);
-        adapter = new ArrayAdapter(getContext(), R.layout.friends_item, snapshots);
-        listView.setAdapter(adapter);
-        */
     }
 
     private void updateContent() {
@@ -128,7 +103,6 @@ public class ListInfoFragment extends Fragment {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 snapshots.add(dataSnapshot);
                 adapter.notifyItemInserted(snapshots.size() - 1);
-//                adapter.add(dataSnapshot);
             }
 
             @Override
@@ -136,8 +110,6 @@ public class ListInfoFragment extends Fragment {
                 int position = getListPosition(dataSnapshot.getKey());
                 snapshots.set(position, dataSnapshot);
                 adapter.notifyItemChanged(position);
-//                adapter.remove(snapshots.get(position));
-//                adapter.insert(dataSnapshot, position);
             }
 
             @Override
@@ -145,7 +117,6 @@ public class ListInfoFragment extends Fragment {
                 int position = getListPosition(dataSnapshot.getKey());
                 snapshots.remove(position);
                 adapter.notifyItemRemoved(position);
-//                adapter.remove(snapshots.get(position));
             }
 
             @Override

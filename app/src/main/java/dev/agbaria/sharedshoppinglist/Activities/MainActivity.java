@@ -8,8 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.CheckBox;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,10 +85,10 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_savedLists:
                 return true;
             case R.id.action_friends:
-            Fragment fragment = FriendsFragment.getInstance(currentUser.getEmail());
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
-                        .addToBackStack(null).commit();
-            return true;
+                Fragment fragment = FriendsFragment.getInstance(currentUser.getEmail(), false, null, null);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
+                            .addToBackStack(null).commit();
+                return true;
             case R.id.action_profile:
                 return true;
             case R.id.action_signout:

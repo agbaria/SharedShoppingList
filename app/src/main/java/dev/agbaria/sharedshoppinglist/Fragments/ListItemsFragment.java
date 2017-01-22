@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -89,13 +88,17 @@ public class ListItemsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Fragment fragment;
         switch (item.getItemId()) {
             case R.id.action_favorite:
                 return true;
             case R.id.action_add_friend:
+                fragment = FriendsFragment.getInstance(userID, true, listID, list);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;
             case R.id.action_listInfo:
-                Fragment fragment = ListInfoFragment.getInstance(listID, list);
+                fragment = ListInfoFragment.getInstance(listID, list);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;

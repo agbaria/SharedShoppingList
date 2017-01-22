@@ -1,20 +1,18 @@
 package dev.agbaria.sharedshoppinglist.Adapters;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
@@ -28,11 +26,16 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     private ArrayList<DataSnapshot> friends;
     private LayoutInflater inflater;
     private FragmentActivity activity;
+    private boolean toAdd;
+    private PositionClickedListener listener;
 
-    public FriendsAdapter(ArrayList<DataSnapshot> snapshots, FragmentActivity activity) {
+    public FriendsAdapter(ArrayList<DataSnapshot> snapshots, FragmentActivity activity,
+                          boolean toAdd, @Nullable PositionClickedListener listener) {
         this.friends = snapshots;
         this.inflater = LayoutInflater.from(activity);
         this.activity = activity;
+        this.toAdd = toAdd;
+        this.listener = listener;
     }
 
     @Override
@@ -42,15 +45,19 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         DataSnapshot snapshot = friends.get(position);
         User user = snapshot.getValue(User.class);
         holder.friendName.setText(user.getName());
         holder.friendEmail.setText(user.getEmail());
-        holder.layout.setOnClickListener(new View.OnClickListener() {
+        holder.layout.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO add Listener idf needed
+                if (toAdd)
+                    listener.clicked(holder.getAdapterPosition(), view);
+                else {
+                    //TODO add Listener idf needed
+                }
             }
         });
     }
@@ -73,5 +80,9 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             friendEmail = (TextView) v.findViewById(R.id.tvFriendEmail);
             layout = (RelativeLayout) v.findViewById(R.id.rlFriend);
         }
+    }
+
+    public interface PositionClickedListener{
+        void clicked(int position, View v);
     }
 }

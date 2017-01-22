@@ -2,7 +2,6 @@ package dev.agbaria.sharedshoppinglist.Adapters;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,6 @@ public class ListItemsAdapter extends RecyclerView.Adapter<ListItemsAdapter.View
     public void onBindViewHolder(ViewHolder holder, int position) {
         final DataSnapshot snapshot = listItems.get(position);
         ListItem item = snapshot.getValue(ListItem.class);
-        Log.d("agbaria", item.toString());
         holder.itemName.setText(item.getItemName());
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override

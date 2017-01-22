@@ -5,64 +5,9 @@
     tools:context="dev.agbaria.sharedshoppinglist.Fragments.ListInfoFragment"
     android:padding="10dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv1"
-        android:text="Created by: "
-        android:textSize="20sp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvListOwner"
-        android:text="UserName"
-        android:textSize="20sp"
-        android:layout_below="@id/tv1"
-        android:layout_marginBottom="5dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv2"
-        android:text="Creation date: "
-        android:textSize="20sp"
-        android:layout_below="@id/tvListOwner"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvCreationDate"
-        android:text="1/1/2017"
-        android:textSize="20sp"
-        android:layout_below="@id/tv2"
-        android:layout_marginBottom="5dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv4"
-        android:text="Participants: "
-        android:textSize="20sp"
-        android:layout_below="@id/tvCreationDate"
-        android:padding="10dp"
-        android:background="#EEEEEE"/>
-
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/recyclerParticipants"
-        android:layout_below="@id/tv4"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="match_parent"
+        android:id="@+id/recyclerParticipants"/>
 
-<!--
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/listParticipants"
-        android:layout_below="@id/tv4"
-        android:layout_alignParentBottom="true"
-        android:animateLayoutChanges="true"
-        />
--->
 </RelativeLayout>
