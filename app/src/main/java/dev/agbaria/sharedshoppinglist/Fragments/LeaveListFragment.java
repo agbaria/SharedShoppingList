@@ -2,7 +2,6 @@ package dev.agbaria.sharedshoppinglist.Fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,29 +20,11 @@ public class LeaveListFragment extends DialogFragment implements View.OnClickLis
 
     private static final int LEAVE_LIST = 1;
     private static final int CANCEL = 0;
-    private static final String LIST_NAME = "listName";
 
-    private TextView tvListName;
-    private Button btnCancel, btnLeave;
-    private String listName;
+    Button btnCancel, btnLeave;
 
     public LeaveListFragment() {
         // Required empty public constructor
-    }
-
-    public static LeaveListFragment getInstance(String listName) {
-        LeaveListFragment fragment = new LeaveListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(LIST_NAME, listName);
-        fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if(getArguments() != null)
-            listName = getArguments().getString(LIST_NAME);
     }
 
     @Override
@@ -51,9 +32,6 @@ public class LeaveListFragment extends DialogFragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_leave_list, container, false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-        tvListName = (TextView) rootView.findViewById(R.id.tvLeaveListName);
-        tvListName.setText(listName);
 
         btnCancel = (Button) rootView.findViewById(R.id.btnCancel);
         btnLeave = (Button) rootView.findViewById(R.id.btnLeave);
