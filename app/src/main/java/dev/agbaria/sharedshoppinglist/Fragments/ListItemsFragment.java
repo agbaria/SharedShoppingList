@@ -44,8 +44,7 @@ public class ListItemsFragment extends Fragment {
     private ShoppingList list;
     private ArrayList<DataSnapshot> snapshots;
     private View view;
-    private ListItemsAdapter adapter;
-    private MyChildEventListener myListner;
+    private MyChildEventListener myListener;
     private DatabaseReference rootRef;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
@@ -81,6 +80,15 @@ public class ListItemsFragment extends Fragment {
                              Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_list_items, container, false);
         initRecycler();
+        view.findViewById(R.id.fab).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AddItemFragment fragment = AddItemFragment.getInstance(listID);
+                        fragment.show(getFragmentManager(), "DialogFragment");
+                    }
+                }
+        );
         return view;
     }
 
@@ -151,20 +159,20 @@ public class ListItemsFragment extends Fragment {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerListItems);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        this.adapter = new ListItemsAdapter(snapshots, getActivity());
+        ListItemsAdapter adapter = new ListItemsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
-        myListner = new MyChildEventListener(snapshots, adapter);
+        myListener = new MyChildEventListener(snapshots, adapter);
     }
 
     private void updateContent() {
         snapshots.clear();
-        rootRef.child("ListItems").child(listID).addChildEventListener(myListner);
+        rootRef.child("ListItems").child(listID).addChildEventListener(myListener);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        rootRef.child("ListItems").child(listID).removeEventListener(myListner);
+        rootRef.child("ListItems").child(listID).removeEventListener(myListener);
     }
 
     private class Task extends AsyncTask<Void, Void, Void> {

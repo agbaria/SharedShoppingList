@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
 
 import dev.agbaria.sharedshoppinglist.R;
@@ -23,8 +22,6 @@ public class LeaveListFragment extends DialogFragment implements View.OnClickLis
     private static final int CANCEL = 0;
     private static final String LIST_NAME = "listName";
 
-    private TextView tvListName;
-    private Button btnCancel, btnLeave;
     private String listName;
 
     public LeaveListFragment() {
@@ -51,14 +48,11 @@ public class LeaveListFragment extends DialogFragment implements View.OnClickLis
         View rootView = inflater.inflate(R.layout.fragment_leave_list, container, false);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-        tvListName = (TextView) rootView.findViewById(R.id.tvLeaveListName);
-        tvListName.setText(listName);
+        ((TextView) rootView.findViewById(R.id.tvLeaveListName)).setText(listName);
 
-        btnCancel = (Button) rootView.findViewById(R.id.btnCancel);
-        btnLeave = (Button) rootView.findViewById(R.id.btnLeave);
+        rootView.findViewById(R.id.btnCancel).setOnClickListener(this);
+        rootView.findViewById(R.id.btnLeave).setOnClickListener(this);
 
-        btnCancel.setOnClickListener(this);
-        btnLeave.setOnClickListener(this);
         return rootView;
     }
 

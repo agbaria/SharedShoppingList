@@ -10,9 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -32,7 +30,6 @@ public class SharedListsFragment extends Fragment {
     private String userID;
     private View view;
     private ArrayList<DataSnapshot> snapshots;
-    private SharedListsAdapter adapter;
     private MyChildEventListener myListener;
 
     public static Fragment getInstance(String userID) {
@@ -75,7 +72,7 @@ public class SharedListsFragment extends Fragment {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerSharedLists);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new SharedListsAdapter(snapshots, getActivity());
+        SharedListsAdapter adapter = new SharedListsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
         myListener = new MyChildEventListener(snapshots, adapter);
     }

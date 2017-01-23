@@ -12,9 +12,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -37,7 +35,6 @@ public class ListInfoFragment extends Fragment {
     private ShoppingList list;
     private ArrayList<DataSnapshot> snapshots;
     private View view;
-    private ListInfoFriendsAdapter adapter;
     private MyChildEventListener myListener;
 
     public static Fragment getInstance(String listID, ShoppingList list) {
@@ -88,7 +85,7 @@ public class ListInfoFragment extends Fragment {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerParticipants);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ListInfoFriendsAdapter(snapshots, list,getActivity());
+        ListInfoFriendsAdapter adapter = new ListInfoFriendsAdapter(snapshots, list, getActivity());
         recycler.setAdapter(adapter);
         myListener = new MyChildEventListener(snapshots, adapter);
     }

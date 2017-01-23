@@ -18,14 +18,13 @@ import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
- * Created by 3la2 on 09/01/2017.
+ * Created by agbaria on 09/01/2017.
  */
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
 
     private ArrayList<DataSnapshot> friends;
     private LayoutInflater inflater;
-    private FragmentActivity activity;
     private boolean toAdd;
     private PositionClickedListener listener;
 
@@ -33,7 +32,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
                           boolean toAdd, @Nullable PositionClickedListener listener) {
         this.friends = snapshots;
         this.inflater = LayoutInflater.from(activity);
-        this.activity = activity;
         this.toAdd = toAdd;
         this.listener = listener;
     }
