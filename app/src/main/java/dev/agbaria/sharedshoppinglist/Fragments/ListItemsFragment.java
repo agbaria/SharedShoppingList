@@ -26,7 +26,7 @@ import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListItemsAdapter;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
-import dev.agbaria.sharedshoppinglist.MyChildEventListener;
+import dev.agbaria.sharedshoppinglist.Listeners.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;
 
@@ -70,7 +70,7 @@ public class ListItemsFragment extends Fragment {
             this.listID = arguments.getString(LIST_ID);
             this.list = (ShoppingList) arguments.getSerializable(LIST);
         }
-        this.userID = Utils.getUserID();
+        userID = Utils.getUserID();
         rootRef = FirebaseDatabase.getInstance().getReference();
         snapshots = new ArrayList<>();
     }
@@ -106,7 +106,7 @@ public class ListItemsFragment extends Fragment {
             case R.id.action_favorite:
                 return true;
             case R.id.action_add_friend:
-                fragment = FriendsFragment.getInstance(userID, true, listID, list);
+                fragment = FriendsFragment.getInstance(true, listID, list);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;

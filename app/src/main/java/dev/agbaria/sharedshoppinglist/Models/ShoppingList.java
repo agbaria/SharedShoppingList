@@ -3,7 +3,8 @@ package dev.agbaria.sharedshoppinglist.Models;
 import java.io.Serializable;
 
 /**
- * Created by ANDROID on 28/12/2016.
+ * Created by agbaria on 28/12/2016.
+ * ShoppingList POJO
  */
 
 public class ShoppingList implements Serializable {

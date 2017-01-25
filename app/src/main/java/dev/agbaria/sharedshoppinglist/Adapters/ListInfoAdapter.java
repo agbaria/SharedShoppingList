@@ -22,14 +22,14 @@ import dev.agbaria.sharedshoppinglist.R;
  * Created by ANDROID on 22/01/2017.
  */
 
-public class ListInfoFriendsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int FIRST = 1;
     private ArrayList<DataSnapshot> friends;
     private ShoppingList list;
     private LayoutInflater inflater;
 
-    public ListInfoFriendsAdapter(ArrayList<DataSnapshot> snapshots, ShoppingList list, FragmentActivity activity) {
+    public ListInfoAdapter(ArrayList<DataSnapshot> snapshots, ShoppingList list, FragmentActivity activity) {
         this.friends = snapshots;
         this.list = list;
         this.inflater = LayoutInflater.from(activity);
@@ -66,7 +66,7 @@ public class ListInfoFriendsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             viewHolder.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //TODO add Listener idf needed
+                    //TODO add Listener if needed
                 }
             });
         }
@@ -87,6 +87,7 @@ public class ListInfoFriendsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
+
         public TextView listOwner;
         public TextView creationDate;
 
@@ -98,10 +99,11 @@ public class ListInfoFriendsAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     public class FriendViewHolder extends RecyclerView.ViewHolder {
+
         public TextView friendName;
         public TextView friendEmail;
-
         public RelativeLayout layout;
+
         public FriendViewHolder(View v) {
             super(v);
             friendName = (TextView) v.findViewById(R.id.tvFriendName);

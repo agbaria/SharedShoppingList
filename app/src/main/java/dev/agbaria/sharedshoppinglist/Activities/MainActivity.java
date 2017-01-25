@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import dev.agbaria.sharedshoppinglist.Fragments.FriendsFragment;
+import dev.agbaria.sharedshoppinglist.Fragments.SavedListsFragment;
 import dev.agbaria.sharedshoppinglist.Fragments.SharedListsFragment;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -20,7 +21,6 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser currentUser;
     private boolean isFirst;
 
     @Override
@@ -47,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (isFirst){
                     isFirst = false;
-                    currentUser = mAuth.getCurrentUser();
-                    assert currentUser != null;
-                    Fragment shoppingLists = SharedListsFragment.getInstance(currentUser.getEmail());
+                    Fragment shoppingLists = new SharedListsFragment();
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.content_main, shoppingLists).commit();
                 }
@@ -79,15 +77,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Fragment fragment;
         switch (item.getItemId()) {
-            case R.id.action_addList:
-                return true;
             case R.id.action_savedLists:
+                fragment = SavedListsFragment.getInstance(false);
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
+                        .addToBackStack(null).commit();
                 return true;
             case R.id.action_friends:
-                Fragment fragment = FriendsFragment.getInstance(currentUser.getEmail(), false, null, null);
+                fragment = FriendsFragment.getInstance(false, null, null);
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
-                            .addToBackStack(null).commit();
+                        .addToBackStack(null).commit();
                 return true;
             case R.id.action_profile:
                 return true;

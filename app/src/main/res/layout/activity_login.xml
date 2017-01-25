@@ -85,11 +85,11 @@
         android:text="Sign in"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etForgotPass"
         android:background="#fff"
-        android:layout_centerHorizontal="true"
         android:id="@+id/button3"
-        android:onClick="signInWithEmail"/>
+        android:onClick="signInWithEmail"
+        android:layout_below="@+id/etForgotPass"
+        android:layout_centerHorizontal="true" />
 
     <View
         android:layout_below="@id/button3"
@@ -117,5 +117,6 @@
         android:layout_toRightOf="@id/tv2"
         android:layout_toEndOf="@id/tv2"
         android:id="@+id/tvSignUp" />
+
 
 </RelativeLayout>

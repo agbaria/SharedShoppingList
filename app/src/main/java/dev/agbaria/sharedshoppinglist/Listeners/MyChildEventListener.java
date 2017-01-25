@@ -1,4 +1,4 @@
-package dev.agbaria.sharedshoppinglist;
+package dev.agbaria.sharedshoppinglist.Listeners;
 
 import android.support.v7.widget.RecyclerView;
 
@@ -7,8 +7,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
-
-import dev.agbaria.sharedshoppinglist.Adapters.SharedListsAdapter;
 
 /**
  * Created by 3la2 on 22/01/2017.

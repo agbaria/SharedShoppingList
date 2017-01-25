@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
+import dev.agbaria.sharedshoppinglist.Listeners.PositionClickedListener;
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -78,9 +79,5 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
             friendEmail = (TextView) v.findViewById(R.id.tvFriendEmail);
             layout = (RelativeLayout) v.findViewById(R.id.rlFriend);
         }
-    }
-
-    public interface PositionClickedListener{
-        void clicked(int position, View v);
     }
 }

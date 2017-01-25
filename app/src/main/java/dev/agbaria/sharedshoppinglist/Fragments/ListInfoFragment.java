@@ -18,9 +18,9 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
-import dev.agbaria.sharedshoppinglist.Adapters.ListInfoFriendsAdapter;
+import dev.agbaria.sharedshoppinglist.Adapters.ListInfoAdapter;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
-import dev.agbaria.sharedshoppinglist.MyChildEventListener;
+import dev.agbaria.sharedshoppinglist.Listeners.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
@@ -85,7 +85,7 @@ public class ListInfoFragment extends Fragment {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerParticipants);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        ListInfoFriendsAdapter adapter = new ListInfoFriendsAdapter(snapshots, list, getActivity());
+        ListInfoAdapter adapter = new ListInfoAdapter(snapshots, list, getActivity());
         recycler.setAdapter(adapter);
         myListener = new MyChildEventListener(snapshots, adapter);
     }
