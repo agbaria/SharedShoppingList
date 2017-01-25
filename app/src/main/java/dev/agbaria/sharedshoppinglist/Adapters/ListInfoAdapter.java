@@ -14,6 +14,7 @@ import com.google.firebase.database.DataSnapshot;
 import java.util.ArrayList;
 import java.util.Date;
 
+import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
@@ -27,11 +28,14 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int FIRST = 1;
     private ArrayList<DataSnapshot> friends;
     private ShoppingList list;
+    private MySharedList myList;
     private LayoutInflater inflater;
 
-    public ListInfoAdapter(ArrayList<DataSnapshot> snapshots, ShoppingList list, FragmentActivity activity) {
+    public ListInfoAdapter(ArrayList<DataSnapshot> snapshots, ShoppingList list, MySharedList myList
+            , FragmentActivity activity) {
         this.friends = snapshots;
         this.list = list;
+        this.myList = myList;
         this.inflater = LayoutInflater.from(activity);
     }
 
@@ -53,8 +57,10 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewType == FIRST){
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             viewHolder.listOwner.setText(list.getListOwner());
-            Date date = new Date(list.getCreationTimeStamp() * 1000L);
-            viewHolder.creationDate.setText(DateFormat.format("dd/MM/yyyy", date));
+            Date creationDate = new Date(list.getCreationTimeStamp() * 1000L);
+            viewHolder.creationDate.setText(DateFormat.format("dd/MM/yyyy", creationDate));
+            Date joinDate = new Date(myList.getJoinDate() * 1000L);
+            viewHolder.joinDate.setText(DateFormat.format("dd/MM/yyyy", joinDate));
         }
         else{
             FriendViewHolder viewHolder = (FriendViewHolder) holder;
@@ -71,7 +77,6 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             });
         }
     }
-
 
     @Override
     public int getItemCount() {
@@ -90,11 +95,13 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         public TextView listOwner;
         public TextView creationDate;
+        public TextView joinDate;
 
         public HeaderViewHolder(View v) {
             super(v);
             listOwner = (TextView) v.findViewById(R.id.tvListOwner);
             creationDate = (TextView) v.findViewById(R.id.tvCreationDate);
+            joinDate = (TextView) v.findViewById(R.id.tvJoinDate);
         }
     }
 

@@ -1,0 +1,37 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="dev.agbaria.sharedshoppinglist.Fragments.AddListFragment"
+    android:padding="5dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/til1">
+        <android.support.design.widget.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etAddListName"
+            android:hint="Enter list name"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:text="Create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCreateListName"
+        android:background="#00ffffff"
+        android:layout_below="@id/til1"
+        android:layout_alignParentRight="true"/>
+
+    <Button
+        android:text="Cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnCancel"
+        android:background="#00ffffff"
+        android:layout_toLeftOf="@id/btnCreateListName"
+        android:layout_below="@id/til1"/>
+
+</RelativeLayout>

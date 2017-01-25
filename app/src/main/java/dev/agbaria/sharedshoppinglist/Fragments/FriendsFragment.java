@@ -26,9 +26,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import dev.agbaria.sharedshoppinglist.Adapters.FriendsAdapter;
 import dev.agbaria.sharedshoppinglist.Listeners.PositionClickedListener;
+import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
@@ -250,19 +254,22 @@ public class FriendsFragment extends Fragment
     }
 
     private class Task extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... voids) {
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+            Map<String, Object> childUpdates = new HashMap<>();
             for (int i = 0; i < friendsToAdd.size(); i++) {
                 if (friendsToAdd.get(i).equals(1)) {
                     DataSnapshot snapshot = snapshots.get(i);
-                    User user = snapshot.getValue(User.class);
+                    User friend = snapshot.getValue(User.class);
+                    String friendID = friend.getEmail();
+                    MySharedList mySharedList = new MySharedList(list.getListName(), new Date().getTime());
 
-                    rootRef.child("SharedWith").child(listID).child(user.getEmail()).setValue(user);
-                    rootRef.child("UserLists").child(user.getEmail()).child(listID).setValue(list);
+                    childUpdates.put("/SharedWith/" + listID + "/" + friendID, friend);
+                    childUpdates.put("/UserLists/" + friendID + "/" + listID, mySharedList);
                 }
             }
+            rootRef.updateChildren(childUpdates);
             return null;
         }
     }

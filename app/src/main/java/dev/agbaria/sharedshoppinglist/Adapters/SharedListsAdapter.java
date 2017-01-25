@@ -10,10 +10,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Fragments.ListItemsFragment;
+import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -40,19 +44,33 @@ public class SharedListsAdapter extends RecyclerView.Adapter<SharedListsAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final DataSnapshot snapshot = shoppingLists.get(position);
-        final ShoppingList shoppingList = snapshot.getValue(ShoppingList.class);
-        holder.listName.setText(shoppingList.getListName());
-        holder.listOwner.setText(shoppingList.getListOwner());
-        holder.layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = ListItemsFragment.getInstance(snapshot.getKey(), shoppingList);
-                activity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.content_main, fragment).addToBackStack(null).commit();
-            }
-        });
+        final MySharedList myList = snapshot.getValue(MySharedList.class);
+        final String listKey = snapshot.getKey();
+        FirebaseDatabase.getInstance().getReference().child("Lists").child(listKey)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        final ShoppingList shoppingList = dataSnapshot.getValue(ShoppingList.class);
+                        holder.listName.setText(shoppingList.getListName());
+                        holder.listOwner.setText(shoppingList.getListOwner());
+                        //TODO display list itemsCount & checkedItemsCount
+                        holder.layout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Fragment fragment = ListItemsFragment.getInstance(listKey, shoppingList, myList);
+                                activity.getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @Override

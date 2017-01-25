@@ -22,24 +22,51 @@
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tv2"
-        android:text="Creation date: "
-        android:textSize="20sp"
+        android:id="@+id/ll"
+        android:orientation="horizontal"
         android:layout_below="@id/tvListOwner"
-        android:layout_marginLeft="5dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tvCreationDate"
-        android:text="1/1/2017"
-        android:textSize="20sp"
-        android:layout_below="@id/tv2"
         android:layout_marginLeft="5dp"
-        android:layout_marginBottom="5dp"/>
+        android:layout_marginBottom="5dp">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Creation date: "
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvCreationDate"
+                android:text="1/1/2017"
+                android:textSize="20sp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join date: "
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvJoinDate"
+                android:text="1/1/2017"
+                android:textSize="20sp"/>
+        </LinearLayout>
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -49,7 +76,7 @@
         android:textSize="20sp"
         android:padding="10dp"
         android:background="#EEEEEE"
-        android:layout_below="@+id/tvCreationDate"
+        android:layout_below="@id/ll"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:paddingStart="5dp"

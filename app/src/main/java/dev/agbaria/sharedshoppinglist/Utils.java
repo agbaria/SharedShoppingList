@@ -32,4 +32,9 @@ public class Utils {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         return currentUser.getEmail().replaceAll("\\.", ",");
     }
+
+    public static String getUserName() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        return currentUser.getDisplayName();
+    }
 }

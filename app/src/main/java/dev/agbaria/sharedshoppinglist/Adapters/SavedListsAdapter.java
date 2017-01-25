@@ -15,7 +15,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.util.ArrayList;
 
-import dev.agbaria.sharedshoppinglist.Listeners.PositionClickedListener;
+import dev.agbaria.sharedshoppinglist.Fragments.SavedListsFragment;
 import dev.agbaria.sharedshoppinglist.Models.SavedList;
 import dev.agbaria.sharedshoppinglist.R;
 
@@ -29,10 +29,10 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     private ArrayList<DataSnapshot> snapshots;
     private LayoutInflater inflater;
     private boolean toAdd;
-    private PositionClickedListener listener;
+    private SavedListsFragment listener;
 
     public SavedListsAdapter(ArrayList<DataSnapshot> snapshots, Activity activity,
-                             boolean toAdd, @Nullable PositionClickedListener listener) {
+                             boolean toAdd, @Nullable SavedListsFragment listener) {
         this.snapshots = snapshots;
         this.inflater = LayoutInflater.from(activity);
         this.toAdd = toAdd;
@@ -54,31 +54,33 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         int viewType = holder.getItemViewType();
-        if (toAdd && viewType == FIRST)
-            return;
-
-        DataSnapshot snapshot = null;
-        if (!toAdd) {
-            snapshot = snapshots.get(position);
-            Log.d("agbaria", "P: " + position);
+        if (toAdd && viewType == FIRST) {
+            HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
+            headerHolder.btnCreateList.setOnClickListener(listener);
         }
-        else if (viewType != FIRST) {
-            snapshot = snapshots.get(position - 1);
-        }
-        Log.d("agbaria", snapshot.toString());
-        SavedListViewHolder viewHolder = (SavedListViewHolder) holder;
-        SavedList savedList = snapshot.getValue(SavedList.class);
-        viewHolder.tvListName.setText(savedList.getListName());
-        viewHolder.layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (toAdd)
-                    listener.clicked(holder.getAdapterPosition(), view);
-                else {
-                    //TODO add listener
-                }
+        else {
+            DataSnapshot snapshot = null;
+            if (!toAdd) {
+                snapshot = snapshots.get(position);
+                Log.d("agbaria", "P: " + position);
+            } else if (viewType != FIRST) {
+                snapshot = snapshots.get(position - 1);
             }
-        });
+            Log.d("agbaria", snapshot.toString());
+            SavedListViewHolder viewHolder = (SavedListViewHolder) holder;
+            SavedList savedList = snapshot.getValue(SavedList.class);
+            viewHolder.tvListName.setText(savedList.getListName());
+            viewHolder.layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (toAdd)
+                        listener.clicked(holder.getAdapterPosition(), view);
+                    else {
+                        //TODO add positionClickedListener
+                    }
+                }
+            });
+        }
     }
 
     @Override
@@ -98,8 +100,11 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
+        public Button btnCreateList;
+
         public HeaderViewHolder(View v) {
             super(v);
+            btnCreateList = (Button) v.findViewById(R.id.btnCreateList);
         }
     }
 

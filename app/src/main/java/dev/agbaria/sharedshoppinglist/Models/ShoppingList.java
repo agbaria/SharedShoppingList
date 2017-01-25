@@ -11,15 +11,19 @@ public class ShoppingList implements Serializable {
     private String listName;
     private String listOwner;
     private long creationTimeStamp;
+    private int items;
+    private int checkedItems;
 
     public ShoppingList() {
 
     }
 
-    public ShoppingList(String listName, String listOwner, long creationTimeStamp) {
+    public ShoppingList(String listName, String listOwner, long creationTimeStamp, int items, int checkedItems) {
         this.listName = listName;
         this.listOwner = listOwner;
         this.creationTimeStamp = creationTimeStamp;
+        this.items = items;
+        this.checkedItems = checkedItems;
     }
 
     public String getListName() {
@@ -44,5 +48,21 @@ public class ShoppingList implements Serializable {
 
     public void setCreationTimeStamp(long creationTimeStamp) {
         this.creationTimeStamp = creationTimeStamp;
+    }
+
+    public int getItems() {
+        return items;
+    }
+
+    public void setItems(int items) {
+        this.items = items;
+    }
+
+    public int getCheckedItems() {
+        return checkedItems;
+    }
+
+    public void setCheckedItems(int checkedItems) {
+        this.checkedItems = checkedItems;
     }
 }

@@ -19,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListInfoAdapter;
+import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.Listeners.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
@@ -30,18 +31,21 @@ public class ListInfoFragment extends Fragment {
 
     private static final String LIST_ID = "listID";
     private static final String LIST = "list";
+    private static final String MY_LIST = "myList";
 
     private String listID;
     private ShoppingList list;
+    private MySharedList myList;
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private MyChildEventListener myListener;
 
-    public static Fragment getInstance(String listID, ShoppingList list) {
+    public static Fragment getInstance(String listID, ShoppingList list, MySharedList myList) {
         Fragment fragment = new ListInfoFragment();
         Bundle bundle = new Bundle();
         bundle.putString(LIST_ID, listID);
         bundle.putSerializable(LIST, list);
+        bundle.putSerializable(MY_LIST, myList);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -58,6 +62,7 @@ public class ListInfoFragment extends Fragment {
         if(getArguments() != null) {
             this.listID = getArguments().getString(LIST_ID);
             this.list = (ShoppingList) getArguments().getSerializable(LIST);
+            this.myList = (MySharedList) getArguments().getSerializable(MY_LIST);
         }
         snapshots = new ArrayList<>();
     }
@@ -85,7 +90,7 @@ public class ListInfoFragment extends Fragment {
     private void initRecycler() {
         RecyclerView recycler = (RecyclerView) view.findViewById(R.id.recyclerParticipants);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        ListInfoAdapter adapter = new ListInfoAdapter(snapshots, list, getActivity());
+        ListInfoAdapter adapter = new ListInfoAdapter(snapshots, list, myList, getActivity());
         recycler.setAdapter(adapter);
         myListener = new MyChildEventListener(snapshots, adapter);
     }

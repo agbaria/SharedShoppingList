@@ -9,6 +9,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListItemsAdapter;
+import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.Listeners.MyChildEventListener;
 import dev.agbaria.sharedshoppinglist.R;
@@ -38,20 +40,23 @@ public class ListItemsFragment extends Fragment {
     private static final String LIST_ID = "listID";
     private static final String LIST = "list";
     private static final int LEAVE_LIST = 10;
+    private static final String MY_LIST = "myList";
 
     private String userID;
     private String listID;
     private ShoppingList list;
+    private MySharedList myList;
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private MyChildEventListener myListener;
     private DatabaseReference rootRef;
 
-    public static Fragment getInstance(String listID, ShoppingList list) {
+    public static Fragment getInstance(String listID, ShoppingList list, MySharedList myList) {
         Fragment fragment = new ListItemsFragment();
         Bundle bundle = new Bundle();
         bundle.putString(LIST_ID, listID);
         bundle.putSerializable(LIST, list);
+        bundle.putSerializable(MY_LIST, myList);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -69,6 +74,7 @@ public class ListItemsFragment extends Fragment {
             Bundle arguments = getArguments();
             this.listID = arguments.getString(LIST_ID);
             this.list = (ShoppingList) arguments.getSerializable(LIST);
+            this.myList = (MySharedList) arguments.getSerializable(MY_LIST);
         }
         userID = Utils.getUserID();
         rootRef = FirebaseDatabase.getInstance().getReference();
@@ -111,12 +117,12 @@ public class ListItemsFragment extends Fragment {
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;
             case R.id.action_listInfo:
-                fragment = ListInfoFragment.getInstance(listID, list);
+                fragment = ListInfoFragment.getInstance(listID, list, myList);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;
             case R.id.action_leaveList:
-                fragment = LeaveListFragment.getInstance(list.getListName());
+                fragment = LeaveListFragment.getInstance(listID);
                 fragment.setTargetFragment(this, LEAVE_LIST);
                 ((DialogFragment) fragment).show(getFragmentManager(), "DialogFragment");
                 return true;
@@ -187,11 +193,13 @@ public class ListItemsFragment extends Fragment {
                                     new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                            if(!dataSnapshot.exists())
+                                            if (!dataSnapshot.exists()) {
                                                 rootRef.child("ListItems").child(listID).removeValue();
+                                                rootRef.child("Lists").child(listID).removeValue();
+                                            }
                                             else {
+                                                Log.d("agbaria", dataSnapshot.toString());
                                                 //TODO change list owner
-                                                //probably need to change the database structure
                                             }
                                         }
 

@@ -27,6 +27,7 @@ import dev.agbaria.sharedshoppinglist.Utils;
  */
 public class SharedListsFragment extends Fragment {
 
+    private static final int ADD_LIST = 1;
     private String userID;
     private View view;
     private ArrayList<DataSnapshot> snapshots;
@@ -62,6 +63,7 @@ public class SharedListsFragment extends Fragment {
                 return true;
             case R.id.action_addList:
                 SavedListsFragment fragment = SavedListsFragment.getInstance(true);
+                fragment.setTargetFragment(this, ADD_LIST);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
                         .addToBackStack(null).commit();
                 return true;
