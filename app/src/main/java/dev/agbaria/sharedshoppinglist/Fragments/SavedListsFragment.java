@@ -1,6 +1,7 @@
 package dev.agbaria.sharedshoppinglist.Fragments;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -25,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dev.agbaria.sharedshoppinglist.Adapters.SavedListsAdapter;
-import dev.agbaria.sharedshoppinglist.Listeners.ListNameListener;
 import dev.agbaria.sharedshoppinglist.Listeners.PositionClickedListener;
 import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.SavedList;
@@ -37,10 +37,17 @@ import dev.agbaria.sharedshoppinglist.Utils;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SavedListsFragment extends Fragment implements PositionClickedListener, View.OnClickListener, ListNameListener {
+public class SavedListsFragment extends Fragment implements PositionClickedListener, View.OnClickListener {
 
     private static final String TO_ADD = "toAdd";
+    //request codes:
     private static final int LIST_NAME = 1;
+    //received result codes:
+    private static final int OK = 1;
+    //to send result codes:
+    private static final int NEW_LIST = 1;
+    private static final int SAVED_LIST = 2;
+
     private boolean toAdd;
     private String userID;
     private ArrayList<DataSnapshot> snapshots;
@@ -131,34 +138,34 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
     @Override
     public void clicked(int position, View v) {
         v.setBackgroundColor(Color.LTGRAY);
+        String listKey = snapshots.get(position).getKey();
         SavedList list = snapshots.get(position).getValue(SavedList.class);
-
+        Intent data = new Intent();
+        data.putExtra("listName", list.getListName());
+        data.putExtra("listKey", listKey);
+        sendResult(SAVED_LIST, data);
     }
 
     @Override
     public void onClick(View view) {
-        AddListFragment fragment = new AddListFragment();
+        EnterListNameFragment fragment = new EnterListNameFragment();
         fragment.setTargetFragment(this, LIST_NAME);
-        fragment.show(getActivity().getSupportFragmentManager(), "");
-        //TODO complete from here ...
+        fragment.show(getActivity().getSupportFragmentManager(), "EnterListNameFragment");
     }
 
     @Override
-    public void createList(String listName) {
-        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-        String listKey = mDatabase.child("Lists").push().getKey();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case LIST_NAME:
+                if (resultCode == OK)
+                    sendResult(NEW_LIST, data);
+                break;
+        }
+    }
 
-        ShoppingList shoppingList = new ShoppingList(listName, userID, new Date().getTime(), 0, 0);
-        MySharedList mySharedList = new MySharedList(listName, new Date().getTime());
-        User user = new User(Utils.getUserName(), userID);
-
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/Lists/" + listKey, shoppingList);
-        childUpdates.put("/UserLists/" + userID + "/" + listKey, mySharedList);
-        childUpdates.put("/SharedWith/" + listKey + "/" + userID, user);
-
-        mDatabase.updateChildren(childUpdates);
-
+    public void sendResult(int resultCode, Intent data) {
+        getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
         getActivity().getSupportFragmentManager().popBackStack();
     }
 }

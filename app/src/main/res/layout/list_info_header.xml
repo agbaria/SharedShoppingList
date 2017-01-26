@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv1"
-        android:text="Created by: "
+        android:text="@string/created_by"
         android:textSize="20sp"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"/>
@@ -16,13 +16,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvListOwner"
-        android:text="UserName"
         android:textSize="20sp"
         android:layout_below="@id/tv1"
         android:layout_marginLeft="5dp"
         android:layout_marginBottom="5dp"/>
 
     <LinearLayout
+        android:baselineAligned="false"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ll"
@@ -38,14 +38,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Creation date: "
+                android:text="@string/creation_date"
                 android:textSize="20sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvCreationDate"
-                android:text="1/1/2017"
                 android:textSize="20sp"/>
         </LinearLayout>
         <LinearLayout
@@ -56,14 +55,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Join date: "
+                android:text="@string/join_date"
                 android:textSize="20sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvJoinDate"
-                android:text="1/1/2017"
                 android:textSize="20sp"/>
         </LinearLayout>
     </LinearLayout>
@@ -72,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv4"
-        android:text="Participants: "
+        android:text="@string/participants"
         android:textSize="20sp"
         android:padding="10dp"
         android:background="#EEEEEE"

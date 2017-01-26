@@ -16,6 +16,7 @@ import dev.agbaria.sharedshoppinglist.Fragments.FriendsFragment;
 import dev.agbaria.sharedshoppinglist.Fragments.SavedListsFragment;
 import dev.agbaria.sharedshoppinglist.Fragments.SharedListsFragment;
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Utils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if (isFirst){
                     isFirst = false;
+                    Utils.getUser();
                     Fragment shoppingLists = new SharedListsFragment();
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.content_main, shoppingLists).commit();

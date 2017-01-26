@@ -9,14 +9,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvFriendName"
-        android:text="friendName"
         android:textSize="25sp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tvFriendEmail"
-        android:text="myEmail@5example.com"
         android:layout_below="@id/tvFriendName"/>
 
 </RelativeLayout>

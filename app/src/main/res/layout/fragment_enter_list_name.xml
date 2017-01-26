@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="dev.agbaria.sharedshoppinglist.Fragments.AddListFragment"
-    android:padding="5dp">
+    tools:context="dev.agbaria.sharedshoppinglist.Fragments.EnterListNameFragment"
+    android:padding="10dp">
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"

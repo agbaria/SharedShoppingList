@@ -8,7 +8,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="saved list name"
         android:id="@+id/tvSavedListName"
         android:textSize="25sp"
         android:paddingLeft="0dp"

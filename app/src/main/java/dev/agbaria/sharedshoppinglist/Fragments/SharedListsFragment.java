@@ -1,24 +1,34 @@
 package dev.agbaria.sharedshoppinglist.Fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import dev.agbaria.sharedshoppinglist.Adapters.SharedListsAdapter;
 import dev.agbaria.sharedshoppinglist.Listeners.MyChildEventListener;
+import dev.agbaria.sharedshoppinglist.Models.MySharedList;
+import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
+import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;
 
@@ -27,7 +37,12 @@ import dev.agbaria.sharedshoppinglist.Utils;
  */
 public class SharedListsFragment extends Fragment {
 
-    private static final int ADD_LIST = 1;
+    //request code
+    private static final int LIST_NAME = 1;
+    //received result codes:
+    private static final int NEW_LIST = 1;
+    private static final int SAVED_LIST = 2;
+
     private String userID;
     private View view;
     private ArrayList<DataSnapshot> snapshots;
@@ -42,7 +57,6 @@ public class SharedListsFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         userID = Utils.getUserID();
         snapshots = new ArrayList<>();
     }
@@ -63,7 +77,7 @@ public class SharedListsFragment extends Fragment {
                 return true;
             case R.id.action_addList:
                 SavedListsFragment fragment = SavedListsFragment.getInstance(true);
-                fragment.setTargetFragment(this, ADD_LIST);
+                fragment.setTargetFragment(this, LIST_NAME);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
                         .addToBackStack(null).commit();
                 return true;
@@ -98,6 +112,58 @@ public class SharedListsFragment extends Fragment {
         super.onPause();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("UserLists").child(userID).removeEventListener(myListener);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case LIST_NAME:
+                String listName = data.getStringExtra("listName");
+                String newListKey = createList(listName);
+                if (resultCode == SAVED_LIST) {
+                    String savedListKey = data.getStringExtra("listKey");
+                    addSavedItems(savedListKey, newListKey);
+                }
+                getActivity().getSupportFragmentManager().popBackStack();
+                break;
+        }
+    }
+
+    private void addSavedItems(String savedListKey, final String newListKey) {
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("ListItems").child(savedListKey).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("/ListItems/" + newListKey, dataSnapshot.getValue());
+                        mDatabase.updateChildren(childUpdates);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
+    }
+
+    public String createList(String listName) {
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+        String listKey = mDatabase.child("Lists").push().getKey();
+
+        ShoppingList shoppingList = new ShoppingList(listName, userID, new Date().getTime(), 0, 0);
+        MySharedList mySharedList = new MySharedList(listName, new Date().getTime());
+        User user = new User(Utils.getUserName(), userID);
+
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/Lists/" + listKey, shoppingList);
+        childUpdates.put("/UserLists/" + userID + "/" + listKey, mySharedList);
+        childUpdates.put("/SharedWith/" + listKey + "/" + userID, user);
+
+        mDatabase.updateChildren(childUpdates);
+        return listKey;
     }
 }
 

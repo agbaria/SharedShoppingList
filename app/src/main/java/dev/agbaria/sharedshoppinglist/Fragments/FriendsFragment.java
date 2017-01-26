@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -225,6 +226,8 @@ public class FriendsFragment extends Fragment
                         User friend = dataSnapshot.getValue(User.class);
                         rootRef.child("UserFriends").child(userID).child(encodedEmail).setValue(friend);
                         etAddFriend.setText("");
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
                 }
 

@@ -9,7 +9,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import dev.agbaria.sharedshoppinglist.Adapters.ListItemsAdapter;
 import dev.agbaria.sharedshoppinglist.Models.MySharedList;
@@ -122,7 +122,7 @@ public class ListItemsFragment extends Fragment {
                         .replace(R.id.content_main, fragment).addToBackStack(null).commit();
                 return true;
             case R.id.action_leaveList:
-                fragment = LeaveListFragment.getInstance(listID);
+                fragment = LeaveListFragment.getInstance(list.getListName());
                 fragment.setTargetFragment(this, LEAVE_LIST);
                 ((DialogFragment) fragment).show(getFragmentManager(), "DialogFragment");
                 return true;
@@ -198,8 +198,11 @@ public class ListItemsFragment extends Fragment {
                                                 rootRef.child("Lists").child(listID).removeValue();
                                             }
                                             else {
-                                                Log.d("agbaria", dataSnapshot.toString());
-                                                //TODO change list owner
+                                                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                                Iterator<DataSnapshot> iterator = children.iterator();
+                                                String key = iterator.next().getKey();
+                                                rootRef.child("Lists").child(listID).child("listOwner")
+                                                        .setValue(key);
                                             }
                                         }
 

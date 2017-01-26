@@ -3,7 +3,6 @@ package dev.agbaria.sharedshoppinglist.Adapters;
 import android.app.Activity;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,8 @@ import dev.agbaria.sharedshoppinglist.Models.SavedList;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
- * Created by 3la2 on 24/01/2017.
+ * Created by agbaria on 24/01/2017.
+ *
  */
 
 public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -59,14 +59,12 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             headerHolder.btnCreateList.setOnClickListener(listener);
         }
         else {
-            DataSnapshot snapshot = null;
+            DataSnapshot snapshot;
             if (!toAdd) {
                 snapshot = snapshots.get(position);
-                Log.d("agbaria", "P: " + position);
-            } else if (viewType != FIRST) {
+            } else {
                 snapshot = snapshots.get(position - 1);
             }
-            Log.d("agbaria", snapshot.toString());
             SavedListViewHolder viewHolder = (SavedListViewHolder) holder;
             SavedList savedList = snapshot.getValue(SavedList.class);
             viewHolder.tvListName.setText(savedList.getListName());
@@ -74,7 +72,7 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 @Override
                 public void onClick(View view) {
                     if (toAdd)
-                        listener.clicked(holder.getAdapterPosition(), view);
+                        listener.clicked(holder.getAdapterPosition() - 1, view);
                     else {
                         //TODO add positionClickedListener
                     }
@@ -98,22 +96,22 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         return super.getItemViewType(position);
     }
 
-    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        public Button btnCreateList;
+        Button btnCreateList;
 
-        public HeaderViewHolder(View v) {
+        HeaderViewHolder(View v) {
             super(v);
             btnCreateList = (Button) v.findViewById(R.id.btnCreateList);
         }
     }
 
-    public class SavedListViewHolder extends RecyclerView.ViewHolder {
+    private class SavedListViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView tvListName;
-        public RelativeLayout layout;
+        TextView tvListName;
+        RelativeLayout layout;
 
-        public SavedListViewHolder(View v) {
+        SavedListViewHolder(View v) {
             super(v);
 
             tvListName = (TextView) v.findViewById(R.id.tvSavedListName);

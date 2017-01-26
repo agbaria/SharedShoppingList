@@ -3,6 +3,7 @@ package dev.agbaria.sharedshoppinglist.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,14 @@ import dev.agbaria.sharedshoppinglist.R;
 /**
  * A simple {@link DialogFragment} subclass.
  */
-public class AddListFragment extends DialogFragment implements View.OnClickListener {
+public class EnterListNameFragment extends DialogFragment implements View.OnClickListener {
+
+    private static final int OK = 1;
+    private static final int NOT_OK = 2;
 
     private EditText etListName;
 
-    public AddListFragment() {
+    public EnterListNameFragment() {
         // Required empty public constructor
     }
 
@@ -26,7 +30,7 @@ public class AddListFragment extends DialogFragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_enter_list_name, container, false);
         view.findViewById(R.id.btnCancel).setOnClickListener(this);
         view.findViewById(R.id.btnCreateListName).setOnClickListener(this);
         etListName = (EditText) view.findViewById(R.id.etAddListName);
@@ -40,9 +44,10 @@ public class AddListFragment extends DialogFragment implements View.OnClickListe
                 showError();
                 return;
             }
-            else getTargetFragment().onActivityResult(getTargetRequestCode(), 1, new Intent().putExtra("listName", getListName()));
+            else getTargetFragment().onActivityResult(getTargetRequestCode(), OK,
+                    new Intent().putExtra("listName", getListName()));
         }
-        else getTargetFragment().onActivityResult(getTargetRequestCode(), 0, null);
+        else getTargetFragment().onActivityResult(getTargetRequestCode(), NOT_OK, null);
         dismiss();
     }
 
@@ -51,11 +56,10 @@ public class AddListFragment extends DialogFragment implements View.OnClickListe
     }
 
     private boolean validate() {
-        if (getListName().length() < 3)
-            return false;
-        return true;
+        return getListName().length() >= 3;
     }
 
+    @NonNull
     private String getListName() {
         return etListName.getText().toString();
     }

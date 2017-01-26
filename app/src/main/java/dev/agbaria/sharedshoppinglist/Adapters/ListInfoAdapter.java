@@ -57,9 +57,9 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (viewType == FIRST){
             HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
             viewHolder.listOwner.setText(list.getListOwner());
-            Date creationDate = new Date(list.getCreationTimeStamp() * 1000L);
+            Date creationDate = new Date(list.getCreationTimeStamp());
             viewHolder.creationDate.setText(DateFormat.format("dd/MM/yyyy", creationDate));
-            Date joinDate = new Date(myList.getJoinDate() * 1000L);
+            Date joinDate = new Date(myList.getJoinDate());
             viewHolder.joinDate.setText(DateFormat.format("dd/MM/yyyy", joinDate));
         }
         else{
