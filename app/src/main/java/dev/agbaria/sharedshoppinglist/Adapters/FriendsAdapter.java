@@ -20,6 +20,7 @@ import dev.agbaria.sharedshoppinglist.R;
 
 /**
  * Created by agbaria on 09/01/2017.
+ *
  */
 
 public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHolder> {
@@ -66,13 +67,13 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         return friends.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView friendName;
-        public TextView friendEmail;
+        TextView friendName;
+        TextView friendEmail;
         public RelativeLayout layout;
 
-        public ViewHolder(View v) {
+        ViewHolder(View v) {
             super(v);
 
             friendName = (TextView) v.findViewById(R.id.tvFriendName);

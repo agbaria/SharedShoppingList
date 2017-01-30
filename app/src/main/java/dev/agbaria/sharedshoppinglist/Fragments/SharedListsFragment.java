@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,7 +39,6 @@ public class SharedListsFragment extends Fragment {
     //request code
     private static final int LIST_NAME = 1;
     //received result codes:
-    private static final int NEW_LIST = 1;
     private static final int SAVED_LIST = 2;
 
     private String userID;
@@ -66,7 +64,6 @@ public class SharedListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
-        initRecycler();
         return view;
     }
 
@@ -90,6 +87,7 @@ public class SharedListsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         getActivity().setTitle("Shared lists");
+        initRecycler();
         updateContent();
     }
 

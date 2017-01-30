@@ -25,4 +25,9 @@
     <string name="join_date">Join date:</string>
     <string name="participants">Participants:</string>
     <string name="created_by">Created by:</string>
+    <string name="lorem">Lorem Ipsum</string>
+    <string name="checked_by">Checked by:&#160;</string>
+    <string name="unchecked">Unchecked</string>
+    <string name="you">You</string>
+    <string name="action_delete">Remove items</string>
 </resources>

@@ -3,13 +3,35 @@
     android:id="@+id/rlItemItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:padding="5dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/lorem"
         android:id="@+id/tvItemName"
         android:textSize="25sp"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv1"
+        android:text="@string/checked_by"
+        android:layout_below="@id/tvItemName" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvUserName"
+        android:layout_below="@id/tvItemName"
+        android:layout_toEndOf="@id/tv1"
+        android:layout_toRightOf="@id/tv1"
+        android:text="@string/lorem"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:id="@+id/rbCheck"/>
 
 </RelativeLayout>

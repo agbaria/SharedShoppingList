@@ -20,7 +20,8 @@ import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
- * Created by ANDROID on 22/01/2017.
+ * Created by agbaria on 22/01/2017.
+ *
  */
 
 public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -91,13 +92,13 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return super.getItemViewType(position);
     }
 
-    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+    private class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView listOwner;
-        public TextView creationDate;
-        public TextView joinDate;
+        TextView listOwner;
+        TextView creationDate;
+        TextView joinDate;
 
-        public HeaderViewHolder(View v) {
+        HeaderViewHolder(View v) {
             super(v);
             listOwner = (TextView) v.findViewById(R.id.tvListOwner);
             creationDate = (TextView) v.findViewById(R.id.tvCreationDate);
@@ -105,13 +106,13 @@ public class ListInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public class FriendViewHolder extends RecyclerView.ViewHolder {
+    private class FriendViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView friendName;
-        public TextView friendEmail;
+        TextView friendName;
+        TextView friendEmail;
         public RelativeLayout layout;
 
-        public FriendViewHolder(View v) {
+        FriendViewHolder(View v) {
             super(v);
             friendName = (TextView) v.findViewById(R.id.tvFriendName);
             friendEmail = (TextView) v.findViewById(R.id.tvFriendEmail);

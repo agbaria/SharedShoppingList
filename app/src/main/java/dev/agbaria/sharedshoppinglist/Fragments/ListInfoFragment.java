@@ -71,7 +71,6 @@ public class ListInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_list_info, container, false);
-        initRecycler();
         return view;
     }
 
@@ -84,6 +83,7 @@ public class ListInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        initRecycler();
         updateContent();
     }
 

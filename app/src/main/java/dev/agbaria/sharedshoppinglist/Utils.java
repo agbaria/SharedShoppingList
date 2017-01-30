@@ -37,6 +37,10 @@ public class Utils {
         return isValid;
     }
 
+    public static void removeUser() {
+        user = null;
+    }
+
     public static String getUserID() {
         if (user != null)
             return user.getEmail();

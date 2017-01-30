@@ -7,13 +7,15 @@ package dev.agbaria.sharedshoppinglist.Models;
 public class ListItem {
     private String itemName;
     private boolean checked;
+    private String userID;
 
     public ListItem() {
     }
 
-    public ListItem(String itemName, boolean checked) {
+    public ListItem(String itemName, boolean checked, String userID) {
         this.itemName = itemName;
         this.checked = checked;
+        this.userID = userID;
     }
 
     public String getItemName() {
@@ -32,10 +34,18 @@ public class ListItem {
         this.checked = checked;
     }
 
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
     @Override
     public String toString() {
         return "ListItem{" +
-                "itemName='" + itemName + '\'' +
+                "tvItemName='" + itemName + '\'' +
                 ", checked=" + checked +
                 '}';
     }

@@ -21,16 +21,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import dev.agbaria.sharedshoppinglist.Adapters.SavedListsAdapter;
+import dev.agbaria.sharedshoppinglist.DialogFragment.EnterListNameFragment;
 import dev.agbaria.sharedshoppinglist.Listeners.PositionClickedListener;
-import dev.agbaria.sharedshoppinglist.Models.MySharedList;
 import dev.agbaria.sharedshoppinglist.Models.SavedList;
-import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
-import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;
 
@@ -83,8 +78,22 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.view = inflater.inflate(R.layout.fragment_saved_lists, container, false);
-        initRecycler();
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (toAdd) getActivity().setTitle("Create new list");
+        else getActivity().setTitle("Saved lists");
+        initRecycler();
+        updateContent();
     }
 
     private void initRecycler() {
@@ -108,20 +117,6 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
         };
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (toAdd) getActivity().setTitle("Create new list");
-        else getActivity().setTitle("Saved lists");
-        updateContent();
-    }
-
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -136,7 +131,7 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
     }
 
     @Override
-    public void clicked(int position, View v) {
+    public boolean clicked(int position, View v) {
         v.setBackgroundColor(Color.LTGRAY);
         String listKey = snapshots.get(position).getKey();
         SavedList list = snapshots.get(position).getValue(SavedList.class);
@@ -144,6 +139,7 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
         data.putExtra("listName", list.getListName());
         data.putExtra("listKey", listKey);
         sendResult(SAVED_LIST, data);
+        return true;
     }
 
     @Override

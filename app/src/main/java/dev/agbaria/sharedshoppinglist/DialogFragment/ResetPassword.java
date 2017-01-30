@@ -1,4 +1,4 @@
-package dev.agbaria.sharedshoppinglist.Fragments;
+package dev.agbaria.sharedshoppinglist.DialogFragment;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -20,7 +20,8 @@ import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;
 
 /**
- * Created by ANDROID on 21/12/2016.
+ * Created by agbaria on 21/12/2016.
+ *
  */
 
 public class ResetPassword extends DialogFragment implements View.OnClickListener {

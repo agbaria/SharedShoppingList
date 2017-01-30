@@ -1,10 +1,9 @@
-package dev.agbaria.sharedshoppinglist.Fragments;
+package dev.agbaria.sharedshoppinglist.DialogFragment;
 
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +15,28 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import dev.agbaria.sharedshoppinglist.Models.ListItem;
 import dev.agbaria.sharedshoppinglist.R;
+import dev.agbaria.sharedshoppinglist.Transactions.IncreaseTransaction;
 
 /**
- * A simple {@link Fragment} subclass.
+ * A simple {@link DialogFragment} subclass.
  */
 public class AddItemFragment extends DialogFragment implements View.OnClickListener {
 
 
-    private static final String LIST_NAME = "listName";
+    private static final String LIST_ID = "listID";
 
     private EditText etItemName;
-    private DatabaseReference ref;
+    private DatabaseReference listItemsRef;
+    private DatabaseReference listRef;
 
     public AddItemFragment() {
         // Required empty public constructor
     }
 
-    public static AddItemFragment getInstance(String listName) {
+    public static AddItemFragment getInstance(String listID) {
         AddItemFragment fragment = new AddItemFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(LIST_NAME, listName);
+        bundle.putString(LIST_ID, listID);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -44,9 +45,10 @@ public class AddItemFragment extends DialogFragment implements View.OnClickListe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(getArguments() != null) {
-            String listName = getArguments().getString(LIST_NAME);
-            assert listName != null;
-            ref = FirebaseDatabase.getInstance().getReference().child("ListItems").child(listName);
+            String listID = getArguments().getString(LIST_ID);
+            assert listID != null;
+            listItemsRef = FirebaseDatabase.getInstance().getReference().child("ListItems").child(listID);
+            listRef = FirebaseDatabase.getInstance().getReference().child("Lists").child(listID);
         }
     }
 
@@ -66,13 +68,17 @@ public class AddItemFragment extends DialogFragment implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.btnClose)
+        if (view.getId() == R.id.btnClose) {
             dismiss();
+        }
         else {
             String itemName = etItemName.getText().toString();
-            ListItem item = new ListItem(itemName, false);
-            ref.child(itemName).setValue(item);
+            if(itemName.length() == 0)
+                return;
+            ListItem item = new ListItem(itemName, false, null);
+            listItemsRef.child(itemName).setValue(item);
             etItemName.setText("");
+            listRef.child("items").runTransaction(new IncreaseTransaction());
         }
     }
 }

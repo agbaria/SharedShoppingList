@@ -7,6 +7,7 @@ package dev.agbaria.sharedshoppinglist.Models;
 public class User {
     private String name;
     private String email;
+    private String pictureURL;
 
     public User() {
 

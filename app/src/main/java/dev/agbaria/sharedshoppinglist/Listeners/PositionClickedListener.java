@@ -7,5 +7,5 @@ import android.view.View;
  */
 
 public interface PositionClickedListener {
-    void clicked(int position, View v);
+    boolean clicked(int position, View v);
 }

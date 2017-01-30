@@ -1,6 +1,7 @@
 package dev.agbaria.sharedshoppinglist.Fragments;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -103,7 +104,6 @@ public class FriendsFragment extends Fragment
 
         etAddFriend = (EditText) view.findViewById(R.id.etAddFriend);
         ibAddFriend = (ImageButton) view.findViewById(R.id.ibAddFriend);
-        initRecycler();
         return view;
     }
 
@@ -134,6 +134,15 @@ public class FriendsFragment extends Fragment
     public void onStop() {
         super.onStop();
         ibAddFriend.setOnClickListener(null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (toAdd) getActivity().setTitle("Select friends");
+        else getActivity().setTitle("Friends");
+        initRecycler();
+        updateContent();
     }
 
     private void initRecycler() {
@@ -179,14 +188,6 @@ public class FriendsFragment extends Fragment
         };
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (toAdd) getActivity().setTitle("Select friends");
-        else getActivity().setTitle("Friends");
-        updateContent();
-    }
-
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
@@ -226,7 +227,7 @@ public class FriendsFragment extends Fragment
                         User friend = dataSnapshot.getValue(User.class);
                         rootRef.child("UserFriends").child(userID).child(encodedEmail).setValue(friend);
                         etAddFriend.setText("");
-                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
                 }
@@ -239,7 +240,7 @@ public class FriendsFragment extends Fragment
     }
 
     @Override
-    public void clicked(int position, View v) {
+    public boolean clicked(int position, View v) {
         if (friendsToAdd.get(position).equals(0)) {
             friendsToAdd.set(position, 1);
             v.setBackgroundColor(Color.LTGRAY);
@@ -249,14 +250,15 @@ public class FriendsFragment extends Fragment
             friendsToAdd.set(position, 0);
             v.setBackgroundColor(Color.TRANSPARENT);
         }
+        return true;
     }
 
     private void addSelectedFriends() {
-        new Task().execute();
+        new addSelectedFriendsTask().execute();
         getActivity().getSupportFragmentManager().popBackStack();
     }
 
-    private class Task extends AsyncTask<Void, Void, Void> {
+    private class addSelectedFriendsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
             DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();

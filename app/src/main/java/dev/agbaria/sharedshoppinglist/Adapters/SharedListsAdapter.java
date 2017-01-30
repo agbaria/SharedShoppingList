@@ -22,7 +22,8 @@ import dev.agbaria.sharedshoppinglist.Models.ShoppingList;
 import dev.agbaria.sharedshoppinglist.R;
 
 /**
- * Created by ANDROID on 28/12/2016.
+ * Created by agbaria on 28/12/2016.
+ *
  */
 
 public class SharedListsAdapter extends RecyclerView.Adapter<SharedListsAdapter.ViewHolder> {
@@ -61,7 +62,7 @@ public class SharedListsAdapter extends RecyclerView.Adapter<SharedListsAdapter.
                             public void onClick(View view) {
                                 Fragment fragment = ListItemsFragment.getInstance(listKey, shoppingList, myList);
                                 activity.getSupportFragmentManager().beginTransaction()
-                                        .replace(R.id.content_main, fragment).addToBackStack(null).commit();
+                                        .replace(R.id.content_main, fragment, "ListItemsFragment").addToBackStack(null).commit();
                             }
                         });
                     }

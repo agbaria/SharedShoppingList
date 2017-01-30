@@ -28,7 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import dev.agbaria.sharedshoppinglist.Fragments.ResetPassword;
+import dev.agbaria.sharedshoppinglist.DialogFragment.ResetPassword;
 import dev.agbaria.sharedshoppinglist.Models.User;
 import dev.agbaria.sharedshoppinglist.R;
 import dev.agbaria.sharedshoppinglist.Utils;

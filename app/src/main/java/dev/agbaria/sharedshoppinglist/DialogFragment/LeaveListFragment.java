@@ -1,4 +1,4 @@
-package dev.agbaria.sharedshoppinglist.Fragments;
+package dev.agbaria.sharedshoppinglist.DialogFragment;
 
 
 import android.os.Bundle;

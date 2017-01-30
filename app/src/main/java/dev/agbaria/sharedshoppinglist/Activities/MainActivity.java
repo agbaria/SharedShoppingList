@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_profile:
                 return true;
             case R.id.action_signout:
+                Utils.removeUser();
                 FirebaseAuth.getInstance().signOut();
                 return true;
             default:

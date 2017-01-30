@@ -73,9 +73,9 @@ public class SavedListsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 public void onClick(View view) {
                     if (toAdd)
                         listener.clicked(holder.getAdapterPosition() - 1, view);
-                    else {
-                        //TODO add positionClickedListener
-                    }
+//                    else {
+//                        //TODO add positionClickedListener
+//                    }
                 }
             });
         }
