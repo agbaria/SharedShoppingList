@@ -1,5 +1,6 @@
 package dev.agbaria.sharedshoppinglist.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ public class SignupActivity extends AppCompatActivity {
 
     EditText etName, etEmail, etPassword;
     private FirebaseAuth fireAuth;
+    private ProgressDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class SignupActivity extends AppCompatActivity {
     public void signUp(final View view) {
         if(!validate())
             return;
-
+        showProgress();
         fireAuth.createUserWithEmailAndPassword(getEmail(), getPassword()).
                 addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
@@ -59,6 +61,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void showError(Exception e, View v) {
+        hideProgress();
         Snackbar.make(v, e.getLocalizedMessage(), Snackbar.LENGTH_INDEFINITE)
                 .setAction("dismiss", new View.OnClickListener() {
                     @Override
@@ -67,6 +70,7 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     private void gotoMain() {
+        hideProgress();
         Intent intent = new Intent(this, MainActivity.class);
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -100,5 +104,19 @@ public class SignupActivity extends AppCompatActivity {
 
     private String getPassword() {
         return etPassword.getText().toString();
+    }
+
+    private void showProgress() {
+        if (dialog == null) {
+            dialog = new ProgressDialog(this);
+            dialog.setTitle("Signing up");
+            dialog.setMessage("Please wait ...");
+        }
+        dialog.show();
+    }
+
+    private void hideProgress() {
+        if (dialog != null)
+            dialog.dismiss();
     }
 }

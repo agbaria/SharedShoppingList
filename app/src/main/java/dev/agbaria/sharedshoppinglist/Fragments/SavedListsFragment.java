@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,6 +50,7 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
     private View view;
     private SavedListsAdapter adapter;
     private ValueEventListener savedListsListener;
+    private ProgressBar progressBar;
 
     public SavedListsFragment() {
         // Required empty public constructor
@@ -78,6 +80,8 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         this.view = inflater.inflate(R.layout.fragment_saved_lists, container, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        showProgress();
         return view;
     }
 
@@ -108,6 +112,7 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                 for (DataSnapshot aChildren : children) snapshots.add(aChildren);
                 adapter.notifyDataSetChanged();
+                hideProgress();
             }
 
             @Override
@@ -163,5 +168,13 @@ public class SavedListsFragment extends Fragment implements PositionClickedListe
     public void sendResult(int resultCode, Intent data) {
         getTargetFragment().onActivityResult(getTargetRequestCode(), resultCode, data);
         getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

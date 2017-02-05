@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -45,6 +46,7 @@ public class SharedListsFragment extends Fragment {
     private View view;
     private ArrayList<DataSnapshot> snapshots;
     private MyChildEventListener myListener;
+    private ProgressBar progressBar;
 
     public SharedListsFragment() {
         // Required empty public constructor
@@ -64,6 +66,8 @@ public class SharedListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_shopping_lists, container, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        showProgress();
         return view;
     }
 
@@ -96,13 +100,27 @@ public class SharedListsFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         SharedListsAdapter adapter = new SharedListsAdapter(snapshots, getActivity());
         recycler.setAdapter(adapter);
-        myListener = new MyChildEventListener(snapshots, adapter);
+        myListener = new MyChildEventListener(snapshots, adapter, progressBar);
     }
 
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("UserLists").child(userID).addChildEventListener(myListener);
+        rootRef.child("UserLists").child(userID).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() == 0)
+                            hideProgress();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -162,6 +180,14 @@ public class SharedListsFragment extends Fragment {
 
         mDatabase.updateChildren(childUpdates);
         return listKey;
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }
 

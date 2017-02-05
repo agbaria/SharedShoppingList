@@ -1,6 +1,7 @@
 package dev.agbaria.sharedshoppinglist.Listeners;
 
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -16,14 +17,17 @@ public class MyChildEventListener implements ChildEventListener {
 
     private ArrayList<DataSnapshot> snapshots;
     private RecyclerView.Adapter adapter;
+    private View progressBar;
 
-    public MyChildEventListener(ArrayList<DataSnapshot> snapshots, RecyclerView.Adapter adapter) {
+    public MyChildEventListener(ArrayList<DataSnapshot> snapshots, RecyclerView.Adapter adapter, View progressBar) {
         this.snapshots = snapshots;
         this.adapter = adapter;
+        this.progressBar = progressBar;
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        hideProgress();
         snapshots.add(dataSnapshot);
         adapter.notifyItemInserted(snapshots.size() - 1);
     }
@@ -58,5 +62,9 @@ public class MyChildEventListener implements ChildEventListener {
                 return i;
         }
         throw new IllegalArgumentException("List key was not found");
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

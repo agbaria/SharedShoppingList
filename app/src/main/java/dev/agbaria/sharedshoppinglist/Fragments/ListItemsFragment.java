@@ -1,6 +1,5 @@
 package dev.agbaria.sharedshoppinglist.Fragments;
 
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -11,13 +10,13 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -63,6 +62,8 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
     private View view;
     private ChildEventListener myListener;
     private DatabaseReference rootRef;
+
+    private ProgressBar progressBar;
 
     //select mode
     private MenuItem deleteIcon;
@@ -116,6 +117,8 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
                     }
                 }
         );
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        showProgress();
         return view;
     }
 
@@ -164,6 +167,7 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
     }
 
     private void deleteSelectedItems() {
+        showProgress();
         new deleteItemsTask().execute();
         selectMode = 2;
         selectCount = 0;
@@ -214,6 +218,7 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
                 snapshots.add(dataSnapshot);
                 selected.add(0);
                 adapter.notifyItemInserted(snapshots.size() - 1);
+                hideProgress();
             }
 
             @Override
@@ -246,6 +251,20 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
     private void updateContent() {
         snapshots.clear();
         rootRef.child("ListItems").child(listID).addChildEventListener(myListener);
+        rootRef.child("ListItems").child(listID).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() == 0)
+                            hideProgress();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -365,6 +384,11 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
             });
             return null;
         }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            hideProgress();
+        }
     }
 
     private int getListPosition(String key) {
@@ -373,5 +397,13 @@ public class ListItemsFragment extends Fragment implements PositionClickedListen
                 return i;
         }
         throw new IllegalArgumentException("List key was not found");
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.firebase.database.ChildEventListener;
@@ -63,6 +64,8 @@ public class FriendsFragment extends Fragment
     private ImageButton ibAddFriend;
     private ChildEventListener friendsListener;
 
+    private ProgressBar progressBar;
+
     public static Fragment getInstance(boolean toAdd,
                                        @Nullable String listID, @Nullable ShoppingList list) {
         Fragment fragment = new FriendsFragment();
@@ -104,6 +107,8 @@ public class FriendsFragment extends Fragment
 
         etAddFriend = (EditText) view.findViewById(R.id.etAddFriend);
         ibAddFriend = (ImageButton) view.findViewById(R.id.ibAddFriend);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        showProgress();
         return view;
     }
 
@@ -160,6 +165,7 @@ public class FriendsFragment extends Fragment
                 if (toAdd)
                     friendsToAdd.add(0);
                 adapter.notifyItemInserted(snapshots.size() - 1);
+                hideProgress();
             }
 
             @Override
@@ -192,6 +198,20 @@ public class FriendsFragment extends Fragment
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("UserFriends").child(userID).addChildEventListener(friendsListener);
+        rootRef.child("UserFriends").child(userID).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() == 0)
+                            hideProgress();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -277,5 +297,13 @@ public class FriendsFragment extends Fragment
             rootRef.updateChildren(childUpdates);
             return null;
         }
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

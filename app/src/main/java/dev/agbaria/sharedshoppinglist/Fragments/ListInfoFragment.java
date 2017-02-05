@@ -11,10 +11,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -39,6 +42,7 @@ public class ListInfoFragment extends Fragment {
     private ArrayList<DataSnapshot> snapshots;
     private View view;
     private MyChildEventListener myListener;
+    private ProgressBar progressBar;
 
     public static Fragment getInstance(String listID, ShoppingList list, MySharedList myList) {
         Fragment fragment = new ListInfoFragment();
@@ -71,6 +75,8 @@ public class ListInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.fragment_list_info, container, false);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressbar);
+        showProgress();
         return view;
     }
 
@@ -92,13 +98,27 @@ public class ListInfoFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         ListInfoAdapter adapter = new ListInfoAdapter(snapshots, list, myList, getActivity());
         recycler.setAdapter(adapter);
-        myListener = new MyChildEventListener(snapshots, adapter);
+        myListener = new MyChildEventListener(snapshots, adapter, progressBar);
     }
 
     private void updateContent() {
         snapshots.clear();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("SharedWith").child(listID).addChildEventListener(myListener);
+        rootRef.child("SharedWith").child(listID).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getChildrenCount() == 0)
+                            hideProgress();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                }
+        );
     }
 
     @Override
@@ -106,5 +126,13 @@ public class ListInfoFragment extends Fragment {
         super.onPause();
         DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
         rootRef.child("SharedWith").child(listID).removeEventListener(myListener);
+    }
+
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }
