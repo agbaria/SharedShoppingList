@@ -16,6 +16,7 @@ public class User {
     public User(String name, String email) {
         this.name = name;
         this.email = email;
+        this.pictureURL = null;
     }
 
     public String getName() {
@@ -33,6 +34,14 @@ public class User {
     public void setEmail(String email) {
             this.email = email;
         }
+
+    public String getPictureURL() {
+        return pictureURL;
+    }
+
+    public void setPictureURL(String pictureURL) {
+        this.pictureURL = pictureURL;
+    }
 
     @Override
     public String toString() {

@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import dev.agbaria.sharedshoppinglist.Fragments.FriendsFragment;
+import dev.agbaria.sharedshoppinglist.Fragments.ProfileFragment;
 import dev.agbaria.sharedshoppinglist.Fragments.SavedListsFragment;
 import dev.agbaria.sharedshoppinglist.Fragments.SharedListsFragment;
 import dev.agbaria.sharedshoppinglist.R;
@@ -94,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
                         .addToBackStack(null).commit();
                 return true;
             case R.id.action_profile:
+                fragment = new ProfileFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment)
+                        .addToBackStack(null).commit();
                 return true;
             case R.id.action_signout:
                 Utils.removeUser();

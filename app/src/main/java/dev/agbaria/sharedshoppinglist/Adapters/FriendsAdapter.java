@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,6 +49,8 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public void onBindViewHolder(final ViewHolder holder, int position) {
         DataSnapshot snapshot = friends.get(position);
         User user = snapshot.getValue(User.class);
+//        if(user.getPictureURL() != null)
+            //TODO change user image if there is one
         holder.friendName.setText(user.getName());
         holder.friendEmail.setText(user.getEmail());
         holder.layout.setOnClickListener(new OnClickListener() {
@@ -69,6 +72,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView friendImage;
         TextView friendName;
         TextView friendEmail;
         public RelativeLayout layout;
@@ -76,6 +80,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         ViewHolder(View v) {
             super(v);
 
+            friendImage = (ImageView) v.findViewById(R.id.ivUserImage);
             friendName = (TextView) v.findViewById(R.id.tvFriendName);
             friendEmail = (TextView) v.findViewById(R.id.tvFriendEmail);
             layout = (RelativeLayout) v.findViewById(R.id.rlFriend);

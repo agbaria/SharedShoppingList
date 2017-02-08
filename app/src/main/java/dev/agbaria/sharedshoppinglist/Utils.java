@@ -67,4 +67,8 @@ public class Utils {
                     }
                 });
     }
+
+    public static User getCurrentUser() {
+        return user;
+    }
 }
